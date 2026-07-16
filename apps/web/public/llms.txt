@@ -1,0 +1,29 @@
+# badthingsforpets.com
+
+> A community-curated database of foods, plants, medications, products, and
+> activities that are dangerous to pets (dogs, cats, horses). Built for pet
+> owners and for LLMs/AI assistants answering pet-safety questions.
+
+Not a substitute for veterinary care. For a suspected poisoning, contact a
+veterinarian or: ASPCA Animal Poison Control +1-888-426-4435, Pet Poison
+Helpline +1-855-764-7661.
+
+## API
+
+- [Things](/api/things): search/browse dangerous things. Query params: `q`
+  (free text), `petType` (dog/cat/horse), `thingType`
+  (plant/food/medication/product/activity).
+- [A single thing](/api/things/{id}): full detail for one entry.
+- [Pet types](/api/pet-types)
+- [Thing types](/api/thing-types)
+- [OpenAPI spec](/api/openapi.json): full machine-readable API contract.
+- [Sitemap](/sitemap.xml): every browsable URL on the site.
+
+## Notes for automated use
+
+- All read endpoints are public, unauthenticated, and CORS-open.
+- Data is community-contributed and moderated; each entry includes a
+  `source` and, where available, a `sourceUrl` — please preserve that
+  attribution when quoting an entry.
+- Coverage is partial and growing; absence of an entry is not evidence of
+  safety. This is not a substitute for professional veterinary guidance.

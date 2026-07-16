@@ -8,6 +8,7 @@ import { SearchModule } from './search/search.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { VerificationModule } from './verification/verification.module.js';
 import { ContributionsModule } from './contributions/contributions.module.js';
+import { SitemapModule } from './sitemap/sitemap.module.js';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ContributionsModule } from './contributions/contributions.module.js';
     AuthModule,
     VerificationModule,
     ContributionsModule,
+    SitemapModule,
   ],
 })
 export class AppModule {}

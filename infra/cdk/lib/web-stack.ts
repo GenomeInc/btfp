@@ -99,6 +99,30 @@ export class WebStack extends cdk.Stack {
 
     // HttpApi.apiEndpoint is "https://{id}.execute-api.{region}.amazonaws.com"; CloudFront needs just the host.
     const apiDomain = cdk.Fn.select(2, cdk.Fn.split('/', props.httpApi.apiEndpoint));
+    const apiOrigin = new origins.HttpOrigin(apiDomain, {
+      protocolPolicy: cloudfront.OriginProtocolPolicy.HTTPS_ONLY,
+    });
+    const apiBehavior: cloudfront.AddBehaviorOptions = {
+      viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+      cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
+      allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
+      originRequestPolicy: cloudfront.OriginRequestPolicy.ALL_VIEWER_EXCEPT_HOST_HEADER,
+    };
+
+    // The origin request policy above strips the viewer's Host header before
+    // forwarding to API Gateway (required so it doesn't fight API Gateway's
+    // own execute-api hostname). The sitemap needs the real public domain to
+    // build absolute URLs, so this edge function re-adds it as a header.
+    const forwardHostFunction = new cloudfront.Function(this, 'ForwardHostFunction', {
+      code: cloudfront.FunctionCode.fromInline(`
+        function handler(event) {
+          var request = event.request;
+          request.headers['x-forwarded-host'] = { value: request.headers.host.value };
+          return request;
+        }
+      `),
+      runtime: cloudfront.FunctionRuntime.JS_2_0,
+    });
 
     this.distribution = new cloudfront.Distribution(this, 'Distribution', {
       defaultBehavior: {
@@ -107,14 +131,15 @@ export class WebStack extends cdk.Stack {
         cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
       },
       additionalBehaviors: {
-        '/api/*': {
-          origin: new origins.HttpOrigin(apiDomain, {
-            protocolPolicy: cloudfront.OriginProtocolPolicy.HTTPS_ONLY,
-          }),
-          viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-          cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
-          allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
-          originRequestPolicy: cloudfront.OriginRequestPolicy.ALL_VIEWER_EXCEPT_HOST_HEADER,
+        '/api/*': { origin: apiOrigin, ...apiBehavior },
+        // Dynamic (queries live thing data) rather than a static file, so it
+        // can't be served from S3 like the rest of the site.
+        '/sitemap.xml': {
+          origin: apiOrigin,
+          ...apiBehavior,
+          functionAssociations: [
+            { function: forwardHostFunction, eventType: cloudfront.FunctionEventType.VIEWER_REQUEST },
+          ],
         },
       },
       domainNames: allDomainNames,
