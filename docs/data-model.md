@@ -31,8 +31,20 @@ memory.
 ## Users table
 
 `PK=USER#<provider>#<providerAccountId>`. Keyed by provider account, not by our own
-internal `id` — the session JWT carries both `sub` (internal id) and `providerAccountId` so
-guards never need a reverse lookup.
+internal `id` — that's what guards use day to day (`VerifiedGuard` re-checks
+`verifiedContributor` against the live record on every request rather than trusting the
+JWT's claim, which goes stale the moment the quiz is passed or a professional verification
+approved — see `docs/verification-flow.md`).
+
+**GSI1** (`GSI1PK=USERID#<id>`, no sort key): lookup by internal `id`. Added specifically
+for reviewing professional verifications (`POST /verification/professional/:userId/review`
+only has the internal id to go on) and for stamping `verifiedOrgDomain` onto approved
+contributions (`ContributionsService.approve` looks up the contributor by id).
+
+Professional verification adds a few internal-only fields not part of the public `User`
+shape — `professionalEmail`, `professionalCodeHash`, `professionalCodeExpiresAt` — stripped
+before any read reaches the API (`stripInternalUserFields` in `users.service.ts`, the Users
+table's equivalent of `stripDynamoKeys`).
 
 ## Search
 

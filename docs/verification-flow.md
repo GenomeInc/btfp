@@ -1,7 +1,10 @@
 # Verification flow
 
 Goal: let people contribute without a heavyweight account-registration flow, while keeping
-out low-effort spam/vandalism. Two gates, both required:
+out low-effort spam/vandalism. Two independent paths to `verifiedContributor: true`, either
+of which unlocks contributing.
+
+## Path 1: quiz
 
 1. **GitHub OAuth sign-in, with an account-age check.** GitHub's `/user` API exposes a
    public `created_at` for the account, which Google's OAuth does not — that's why GitHub
@@ -11,20 +14,64 @@ out low-effort spam/vandalism. Two gates, both required:
    against real ASPCA-listed safe plants as distractors (`quiz-bank.ts`). Framed as fun,
    not a form — see `QuizDialog.tsx`. Must pass all three to unlock contributing.
 
-Passing both flips `verifiedContributor: true` on the user record
-(`UsersService.markVerified`). This is re-checked on every contribution submit via
-`VerifiedGuard`, not just cached client-side.
+## Path 2: professional (organizational email)
+
+For vets and scientists who'd rather prove they work somewhere than take a quiz. Lives in
+`apps/bff/src/professional-verification/`:
+
+1. **Domain gate**: the claimed email's domain must not be a personal/free provider
+   (`free-email-domains.ts` — a hardcoded blocklist, not an npm package, so it's auditable)
+   and must resolve real MX records.
+2. **Bedrock classification** (`bedrock-classifier.service.ts`): Claude Haiku, via Bedrock's
+   Converse API with forced tool-call output, guesses what kind of org the domain looks like
+   (veterinary clinic, university/research, etc.) from the domain name alone — no web
+   access. This is **assistive only, never a gate**: an LLM guessing from a domain string
+   can't actually prove an organization is real, and if Bedrock errors or is unavailable,
+   verification proceeds without a label rather than blocking.
+3. **Proof of ownership**: a 6-digit code (SHA-256 hashed at rest, 15-minute expiry) is
+   emailed via SES to the claimed address. Confirming it moves status to
+   `awaiting_review` — proves the person controls the inbox, but doesn't yet grant anything.
+4. **Human review**: any verified contributor can see the queue (domain + Bedrock's guess,
+   not the full email — keeps the local-part private from reviewers) at
+   `GET /verification/professional/pending` and approve/reject it. Same
+   "any verified contributor can moderate" pattern as contribution review — see the gap
+   noted below.
+
+Approving sets `verifiedContributor: true` (same unlock as the quiz) and, on any
+contribution later approved from that user, stamps `details.verifiedOrgDomain` on the
+resulting `Thing` (`ContributionsService.approve`) — shown as a badge on
+`ThingDetailPage`.
+
+**SES starts in sandbox mode** — can only send to individually-verified recipient
+addresses. Moving to production access is an AWS Support request via the console, not
+automatable. See `docs/infra.md`.
+
+## A bug worth knowing about (fixed)
+
+The session JWT's `verifiedContributor` claim is set once at sign-in and was never
+reissued when the quiz was passed or a professional verification approved — the latter
+can even happen from a *different* browser session (the reviewer's), so there was no way
+to refresh the approved user's own cookie at that moment anyway. `VerifiedGuard` and
+`GET /auth/me` now re-check the live DB record instead of trusting the JWT's cached claim
+(`UsersService.getByProviderAccount` on every guarded request). Costs an extra DynamoDB
+read per request — negligible at this scale, and it closes a real staleness gap: without
+it, a user who passed the quiz would appear "not verified" until they logged out and back
+in, and a revoked/rejected user's stale token would still pass the old guard.
 
 ## Known simplifications (MVP)
 
 - The quiz is regenerated and graded per attempt with no persistence or rate limiting —
   someone could brute-force it by resubmitting. Fine for a launch-scale spam deterrent, not
   bulletproof.
-- `GET /contributions/pending` (the moderation queue) is gated on `verifiedContributor`
-  only, with no separate admin role. Add an allowlist before opening contributions up
-  publicly.
-- Session is a long-lived (30-day) JWT in an httpOnly cookie. There's no revocation
-  mechanism — rotating `JWT_SECRET` invalidates all sessions if you need a hard reset.
+- `GET /contributions/pending` and `GET /verification/professional/pending` are both
+  gated on `verifiedContributor` only, with no separate admin role. Add an allowlist
+  before opening contributions up publicly.
+- Session is a long-lived (30-day) JWT in an httpOnly cookie. The *contributor gate* is now
+  live-checked (see above), but identity itself still can't be revoked before the token
+  expires — rotating `JWT_SECRET` invalidates all sessions if you need a hard reset.
+- Org-email ownership proves someone works there, not that they're specifically a vet or
+  scientist (could be anyone at that domain). Labeled as "verified organization," not
+  "verified veterinarian," on purpose.
 
 ## Setting up real OAuth credentials
 

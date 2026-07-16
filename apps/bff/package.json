@@ -10,7 +10,9 @@
     "lint": "eslint src"
   },
   "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.716.0",
     "@aws-sdk/client-dynamodb": "^3.716.0",
+    "@aws-sdk/client-ses": "^3.716.0",
     "@aws-sdk/lib-dynamodb": "^3.716.0",
     "@btfp/shared-types": "workspace:*",
     "@fastify/aws-lambda": "^4.1.0",

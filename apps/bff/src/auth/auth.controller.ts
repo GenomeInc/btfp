@@ -39,8 +39,12 @@ export class AuthController {
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
-  me(@CurrentUser() user: AuthenticatedUser) {
-    return user;
+  async me(@CurrentUser() user: AuthenticatedUser) {
+    // Live DB state, not the JWT's claims — those go stale the moment the
+    // quiz is passed or a professional verification is approved, since
+    // neither reissues the session token. See VerifiedGuard for the same fix.
+    const account = await this.users.getByProviderAccount(user.provider, user.providerAccountId);
+    return account ?? user;
   }
 
   @Get('logout')

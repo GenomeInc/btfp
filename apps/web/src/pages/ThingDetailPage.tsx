@@ -52,15 +52,23 @@ export function ThingDetailPage() {
       </div>
 
       <dl className="mt-8 space-y-4">
-        {Object.entries(thing.details).map(([key, value]) => (
-          <div key={key}>
-            <dt className="text-xs font-semibold tracking-wide text-neutral-400 uppercase">
-              {humanize(key)}
-            </dt>
-            <dd className="text-neutral-700">{formatValue(value)}</dd>
-          </div>
-        ))}
+        {Object.entries(thing.details)
+          .filter(([key]) => key !== 'verifiedOrgDomain')
+          .map(([key, value]) => (
+            <div key={key}>
+              <dt className="text-xs font-semibold tracking-wide text-neutral-400 uppercase">
+                {humanize(key)}
+              </dt>
+              <dd className="text-neutral-700">{formatValue(value)}</dd>
+            </div>
+          ))}
       </dl>
+
+      {typeof thing.details.verifiedOrgDomain === 'string' && (
+        <p className="mt-6 flex items-center gap-1 text-sm font-semibold text-leaf-600">
+          ✓ Reviewed contribution from a verified organization ({thing.details.verifiedOrgDomain})
+        </p>
+      )}
 
       <p className="mt-8 text-sm text-neutral-400">
         Source: {thing.source}

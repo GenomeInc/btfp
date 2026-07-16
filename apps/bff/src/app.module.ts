@@ -10,6 +10,7 @@ import { VerificationModule } from './verification/verification.module.js';
 import { ContributionsModule } from './contributions/contributions.module.js';
 import { SitemapModule } from './sitemap/sitemap.module.js';
 import { McpModule } from './mcp/mcp.module.js';
+import { ProfessionalVerificationModule } from './professional-verification/professional-verification.module.js';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { McpModule } from './mcp/mcp.module.js';
     ContributionsModule,
     SitemapModule,
     McpModule,
+    ProfessionalVerificationModule,
   ],
 })
 export class AppModule {}

@@ -1,4 +1,4 @@
-import type { PetType, QuizQuestion, Thing, ThingType } from '@btfp/shared-types';
+import type { PetType, QuizQuestion, Thing, ThingType, User } from '@btfp/shared-types';
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`/api${path}`, {
@@ -14,11 +14,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   return res.json() as Promise<T>;
 }
 
-export interface CurrentUser {
-  id: string;
-  displayName: string;
-  verifiedContributor: boolean;
-}
+export type CurrentUser = User;
 
 export const api = {
   listThings: (params: { q?: string; petType?: string; thingType?: string } = {}) => {
@@ -39,4 +35,20 @@ export const api = {
   submitContribution: (payload: Record<string, unknown>) =>
     request('/contributions', { method: 'POST', body: JSON.stringify({ payload }) }),
   listPendingContributions: () => request<unknown[]>('/contributions/pending'),
+  requestProfessionalVerification: (email: string) =>
+    request<{ orgClassification?: string }>('/verification/professional/request', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    }),
+  confirmProfessionalVerification: (code: string) =>
+    request<{ confirmed: boolean }>('/verification/professional/confirm', {
+      method: 'POST',
+      body: JSON.stringify({ code }),
+    }),
+  listPendingProfessionalVerifications: () => request<User[]>('/verification/professional/pending'),
+  reviewProfessionalVerification: (userId: string, approve: boolean, reason?: string) =>
+    request(`/verification/professional/${userId}/review`, {
+      method: 'POST',
+      body: JSON.stringify({ approve, reason }),
+    }),
 };

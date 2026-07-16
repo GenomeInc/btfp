@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCurrentUser } from '../lib/useCurrentUser.js';
 import { api } from '../lib/api.js';
 import { QuizDialog } from '../components/QuizDialog.js';
+import { ProfessionalVerificationDialog } from '../components/ProfessionalVerificationDialog.js';
 
 const THING_TYPES = ['plant', 'food', 'medication', 'product', 'activity'];
 const PET_TYPES = ['dog', 'cat', 'horse'];
@@ -39,15 +40,38 @@ export function SubmitPage() {
     );
   }
 
-  if (!user.verifiedContributor) {
+  if (user.professional?.status === 'awaiting_review') {
     return (
       <div className="mx-auto max-w-xl px-4 py-16 text-center">
-        <h1 className="text-2xl font-bold text-neutral-800">One quick quiz first</h1>
+        <h1 className="text-2xl font-bold text-neutral-800">Almost there</h1>
         <p className="mt-2 text-neutral-500">
-          Your account needs to clear our pet-safety pop quiz before you can add entries.
+          Your organization ({user.professional.domain}) is confirmed and waiting on a quick human
+          review. You can also just take the quiz now instead of waiting.
         </p>
         <div className="mt-6 flex justify-center">
           <QuizDialog onPassed={refresh} />
+        </div>
+      </div>
+    );
+  }
+
+  if (!user.verifiedContributor) {
+    const wasRejected = user.professional?.status === 'rejected';
+    return (
+      <div className="mx-auto max-w-xl px-4 py-16 text-center">
+        <h1 className="text-2xl font-bold text-neutral-800">One quick step first</h1>
+        <p className="mt-2 text-neutral-500">
+          Clear our pet-safety pop quiz, or verify a work email if you're a vet or scientist — either
+          unlocks adding entries.
+        </p>
+        {wasRejected && (
+          <p className="mt-2 text-sm text-alert-600">
+            Your last organization verification wasn't approved{user.professional?.rejectionReason && ` (${user.professional.rejectionReason})`}. You're welcome to try again with a different address.
+          </p>
+        )}
+        <div className="mt-6 flex flex-wrap justify-center gap-3">
+          <QuizDialog onPassed={refresh} />
+          <ProfessionalVerificationDialog onSubmitted={refresh} />
         </div>
       </div>
     );

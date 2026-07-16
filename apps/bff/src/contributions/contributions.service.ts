@@ -10,6 +10,7 @@ import {
 import type { Contribution, Thing } from '@btfp/shared-types';
 import { DYNAMO_DOC_CLIENT, CONTENT_TABLE_NAME } from '../dynamo/dynamo.constants.js';
 import { ThingsService } from '../things/things.service.js';
+import { UsersService } from '../auth/users.service.js';
 import type { CreateContributionDto } from './dto/create-contribution.dto.js';
 
 @Injectable()
@@ -17,6 +18,7 @@ export class ContributionsService {
   constructor(
     @Inject(DYNAMO_DOC_CLIENT) private readonly db: DynamoDBDocumentClient,
     private readonly things: ThingsService,
+    private readonly users: UsersService,
   ) {}
 
   async propose(dto: CreateContributionDto, contributorId: string): Promise<Contribution> {
@@ -69,13 +71,19 @@ export class ContributionsService {
     if (!contribution) throw new NotFoundException('Contribution not found');
 
     const now = new Date().toISOString();
+    const contributor = await this.users.getById(contribution.contributorId);
+    const details = { ...(contribution.payload.details ?? {}) };
+    if (contributor?.professional?.status === 'verified') {
+      details.verifiedOrgDomain = contributor.professional.domain;
+    }
+
     const thing: Thing = {
       id: contribution.thingId ?? thingId,
       name: contribution.payload.name ?? 'Unnamed',
       otherNames: contribution.payload.otherNames ?? [],
       thingTypeId: contribution.payload.thingTypeId ?? 'unknown',
       petTypes: contribution.payload.petTypes ?? [],
-      details: contribution.payload.details ?? {},
+      details,
       source: contribution.payload.source ?? `contributor:${contribution.contributorId}`,
       sourceUrl: contribution.payload.sourceUrl,
       verified: true,

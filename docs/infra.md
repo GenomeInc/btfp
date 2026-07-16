@@ -8,6 +8,10 @@ CLOUDFRONT-scope WAF WebACL; also simplest for a single-region MVP). No VPC, no 
 
 - **`BtfpDns`** — one Route53 public hosted zone for `badthingsforpets.com`. Deployed once,
   standalone, before anything else.
+- **`BtfpEmail`** — one SES domain identity for `badthingsforpets.com`, shared by dev and
+  prod. Deployed once, standalone, alongside `BtfpDns` — auto-creates its DKIM DNS records
+  against the same hosted zone. Used for the professional-verification code emails (see
+  `docs/verification-flow.md`).
 - **`BtfpDev`** / **`BtfpProd`** — CDK Stages, each composing:
   - **Data** — DynamoDB `Content` + `Users` tables, on-demand billing.
   - **Api** — one Lambda running the NestJS BFF, behind an API Gateway HTTP API.
@@ -26,10 +30,22 @@ CLOUDFRONT-scope WAF WebACL; also simplest for a single-region MVP). No VPC, no 
 | DynamoDB (on-demand) | pennies at this scale |
 | CloudFront | pennies at this scale |
 | WAF (2 rule groups) | ~$6-8/mo |
+| SES | ~free — $0.10/1,000 emails, and this only sends verification codes |
+| Bedrock (Claude Haiku, domain classification) | ~free — a few cents per 1,000 calls |
 
 Dev + prod together should land well under $50/mo unless traffic spikes hard. The two
 biggest levers if it doesn't: drop WAF's rate-limit rule, or merge dev+prod's WAF into a
 single shared WebACL.
+
+## SES sandbox
+
+New SES accounts start in sandbox mode: can only send to individually-verified recipient
+addresses, and at a low rate. Moving to production access is an AWS Support request
+submitted via the SES console (Account dashboard → Request production access) — not
+something CDK or the API can do; AWS reviews it, typically same-day. Until that's done,
+`/verification/professional/request` will fail to deliver to any address you haven't
+manually verified with `aws sesv2 create-email-identity --email-identity <address>`
+(AWS emails a confirmation link to that address).
 
 ## Dev is not public
 
@@ -69,11 +85,19 @@ been done yet.
 3. `pnpm --filter @btfp/infra cdk deploy BtfpDns` — copy the `HostedZoneId` output
 4. Set `BTFP_HOSTED_ZONE_ID` (env var, see `infra/cdk/lib/config.ts`) to that value
 5. Set the NS records from `BtfpDns`'s `NameServers` output at your domain registrar
-6. `pnpm --filter @btfp/bff build` — the Api stack deploys the Lambda from
+6. `pnpm --filter @btfp/infra cdk deploy BtfpEmail` — SES domain identity, needs
+   `BTFP_HOSTED_ZONE_ID` set same as above. DKIM verification takes a few minutes to
+   propagate; check with `aws sesv2 get-email-identity --email-identity badthingsforpets.com`.
+7. `pnpm --filter @btfp/bff build` — the Api stack deploys the Lambda from
    `apps/bff/dist`, so it must exist first
-7. `pnpm --filter @btfp/web build` — the Web stack's `BucketDeployment` uploads
+8. `pnpm --filter @btfp/web build` — the Web stack's `BucketDeployment` uploads
    `apps/web/dist` to S3 and invalidates CloudFront as part of `cdk deploy`, so this must
    exist first too
-8. For dev: load `infra/cdk/.env.deploy.local` (see above) before deploying — the Basic
+9. For dev: load `infra/cdk/.env.deploy.local` (see above) before deploying — the Basic
    Auth password comes from there. For prod, no extra env vars needed.
-9. `pnpm --filter @btfp/infra cdk deploy BtfpDev/* BtfpProd/*`
+10. `pnpm --filter @btfp/infra cdk deploy BtfpDev/* BtfpProd/*`
+
+The Bedrock inference profile id (`BEDROCK_INFERENCE_PROFILE_ID` in `config.ts`) is
+hardcoded to Claude Haiku 4.5's current profile — Anthropic model ids on Bedrock are
+versioned and do change over time; if `bedrock:InvokeModel` starts failing with a
+model-not-found error, check `aws bedrock list-inference-profiles` for the current id.

@@ -38,7 +38,7 @@ export class DataStack extends cdk.Stack {
       sortKey: { name: 'GSI1SK', type: dynamodb.AttributeType.STRING },
     });
 
-    // Browse by pet type, e.g. GSI2PK=PETTYPE#dog / GSI2SK=THING#<name>
+    // Moderation queue, e.g. GSI2PK=STATUS#pending / GSI2SK=CONTRIB#<createdAt>
     this.contentTable.addGlobalSecondaryIndex({
       indexName: 'GSI2',
       partitionKey: { name: 'GSI2PK', type: dynamodb.AttributeType.STRING },
@@ -50,6 +50,13 @@ export class DataStack extends cdk.Stack {
       partitionKey: { name: 'PK', type: dynamodb.AttributeType.STRING },
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
       removalPolicy,
+    });
+
+    // Users are keyed by provider+providerAccountId (PK), but reviewing a
+    // professional-verification request needs a lookup by internal id.
+    this.usersTable.addGlobalSecondaryIndex({
+      indexName: 'GSI1',
+      partitionKey: { name: 'GSI1PK', type: dynamodb.AttributeType.STRING },
     });
   }
 }

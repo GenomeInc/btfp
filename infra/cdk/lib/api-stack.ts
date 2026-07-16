@@ -4,9 +4,11 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as apigwv2 from 'aws-cdk-lib/aws-apigatewayv2';
 import { HttpLambdaIntegration } from 'aws-cdk-lib/aws-apigatewayv2-integrations';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
+import * as iam from 'aws-cdk-lib/aws-iam';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { EnvConfig } from './config.js';
+import { BEDROCK_INFERENCE_PROFILE_ID, ROOT_DOMAIN, SES_FROM_ADDRESS } from './config.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -39,11 +41,32 @@ export class ApiStack extends cdk.Stack {
         STAGE: props.envConfig.envName,
         CONTENT_TABLE_NAME: props.contentTable.tableName,
         USERS_TABLE_NAME: props.usersTable.tableName,
+        SES_FROM_ADDRESS,
+        BEDROCK_INFERENCE_PROFILE_ID,
       },
     });
 
     props.contentTable.grantReadWriteData(handler);
     props.usersTable.grantReadWriteData(handler);
+
+    handler.addToRolePolicy(
+      new iam.PolicyStatement({
+        actions: ['ses:SendEmail', 'ses:SendRawEmail'],
+        resources: [`arn:aws:ses:${this.region}:${this.account}:identity/${ROOT_DOMAIN}`],
+      }),
+    );
+
+    // Cross-region inference profiles need permission on both the profile
+    // itself and the underlying foundation models it can route requests to.
+    handler.addToRolePolicy(
+      new iam.PolicyStatement({
+        actions: ['bedrock:InvokeModel'],
+        resources: [
+          `arn:aws:bedrock:${this.region}:${this.account}:inference-profile/${BEDROCK_INFERENCE_PROFILE_ID}`,
+          'arn:aws:bedrock:*::foundation-model/anthropic.claude-*',
+        ],
+      }),
+    );
 
     this.httpApi = new apigwv2.HttpApi(this, 'HttpApi', {
       apiName: `btfp-${props.envConfig.envName}-api`,

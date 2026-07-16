@@ -14,6 +14,12 @@ export const DEV_BASIC_AUTH_USER = process.env.BTFP_DEV_BASIC_AUTH_USER ?? 'dev'
 export const DEV_BASIC_AUTH_PASSWORD =
   process.env.BTFP_DEV_BASIC_AUTH_PASSWORD ?? 'REPLACE_BEFORE_DEPLOYING_DEV';
 
+// Shared by dev + prod; the EmailStack SES identity is for the whole domain.
+export const SES_FROM_ADDRESS = process.env.BTFP_SES_FROM_ADDRESS ?? `noreply@${ROOT_DOMAIN}`;
+
+// Claude Haiku 4.5 needs the inference profile, not the bare model id — see docs/infra.md.
+export const BEDROCK_INFERENCE_PROFILE_ID = 'us.anthropic.claude-haiku-4-5-20251001-v1:0';
+
 export interface EnvConfig {
   envName: 'dev' | 'prod';
   domainName: string;

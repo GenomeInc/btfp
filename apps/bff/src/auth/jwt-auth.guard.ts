@@ -7,7 +7,7 @@ import type { AuthenticatedUser } from './auth.types.js';
 export class JwtAuthGuard implements CanActivate {
   constructor(protected readonly auth: AuthService) {}
 
-  canActivate(context: ExecutionContext): boolean {
+  canActivate(context: ExecutionContext): boolean | Promise<boolean> {
     const request = context
       .switchToHttp()
       .getRequest<FastifyRequest & { user?: AuthenticatedUser }>();
