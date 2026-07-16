@@ -17,6 +17,12 @@ export const DEV_BASIC_AUTH_PASSWORD =
 // Shared by dev + prod; the EmailStack SES identity is for the whole domain.
 export const SES_FROM_ADDRESS = process.env.BTFP_SES_FROM_ADDRESS ?? `noreply@${ROOT_DOMAIN}`;
 
+// Session JWT signing secret. Deliberately separate per environment — never
+// commit real values. Was previously missing entirely, silently falling
+// back to a hardcoded (and public, since this repo is public) default.
+export const DEV_JWT_SECRET = process.env.BTFP_DEV_JWT_SECRET ?? 'REPLACE_BEFORE_DEPLOYING_DEV';
+export const PROD_JWT_SECRET = process.env.BTFP_PROD_JWT_SECRET ?? 'REPLACE_BEFORE_DEPLOYING_PROD';
+
 // Claude Haiku 4.5 needs the inference profile, not the bare model id — see docs/infra.md.
 export const BEDROCK_INFERENCE_PROFILE_ID = 'us.anthropic.claude-haiku-4-5-20251001-v1:0';
 

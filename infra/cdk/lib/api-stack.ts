@@ -8,7 +8,13 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { EnvConfig } from './config.js';
-import { BEDROCK_INFERENCE_PROFILE_ID, ROOT_DOMAIN, SES_FROM_ADDRESS } from './config.js';
+import {
+  BEDROCK_INFERENCE_PROFILE_ID,
+  DEV_JWT_SECRET,
+  PROD_JWT_SECRET,
+  ROOT_DOMAIN,
+  SES_FROM_ADDRESS,
+} from './config.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -43,6 +49,7 @@ export class ApiStack extends cdk.Stack {
         USERS_TABLE_NAME: props.usersTable.tableName,
         SES_FROM_ADDRESS,
         BEDROCK_INFERENCE_PROFILE_ID,
+        JWT_SECRET: props.envConfig.envName === 'prod' ? PROD_JWT_SECRET : DEV_JWT_SECRET,
       },
     });
 
