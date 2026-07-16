@@ -12,7 +12,7 @@ import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { EnvConfig } from './config.js';
-import { HOSTED_ZONE_ID, ROOT_DOMAIN } from './config.js';
+import { DEV_BASIC_AUTH_PASSWORD, DEV_BASIC_AUTH_USER, HOSTED_ZONE_ID, ROOT_DOMAIN } from './config.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -56,6 +56,76 @@ export class WebStack extends cdk.Stack {
     });
 
     // Kept to two rule groups (~$6-8/mo) to stay within budget; see docs/infra.md.
+    const rules: wafv2.CfnWebACL.RuleProperty[] = [
+      {
+        name: 'AWS-CommonRuleSet',
+        priority: isProd ? 0 : 1,
+        overrideAction: { none: {} },
+        statement: {
+          managedRuleGroupStatement: {
+            vendorName: 'AWS',
+            name: 'AWSManagedRulesCommonRuleSet',
+          },
+        },
+        visibilityConfig: {
+          cloudWatchMetricsEnabled: true,
+          metricName: `btfp-${props.envConfig.envName}-common`,
+          sampledRequestsEnabled: true,
+        },
+      },
+      {
+        name: 'RateLimit',
+        priority: isProd ? 1 : 2,
+        action: { block: {} },
+        statement: {
+          rateBasedStatement: { limit: 2000, aggregateKeyType: 'IP' },
+        },
+        visibilityConfig: {
+          cloudWatchMetricsEnabled: true,
+          metricName: `btfp-${props.envConfig.envName}-ratelimit`,
+          sampledRequestsEnabled: true,
+        },
+      },
+    ];
+
+    // Dev isn't meant to be public or bot-crawlable: block everything at the
+    // edge unless it carries the right HTTP Basic Auth header. Runs before
+    // the other rules (priority 0) so unauthenticated traffic never reaches
+    // origin at all — belt-and-suspenders with the robots.txt/X-Robots-Tag
+    // handling below, which only helps for well-behaved crawlers.
+    if (!isProd) {
+      const basicAuthValue = `Basic ${Buffer.from(`${DEV_BASIC_AUTH_USER}:${DEV_BASIC_AUTH_PASSWORD}`).toString('base64')}`;
+      rules.push({
+        name: 'RequireBasicAuth',
+        priority: 0,
+        action: {
+          block: {
+            customResponse: {
+              responseCode: 401,
+              responseHeaders: [{ name: 'WWW-Authenticate', value: 'Basic realm="dev"' }],
+            },
+          },
+        },
+        statement: {
+          notStatement: {
+            statement: {
+              byteMatchStatement: {
+                searchString: basicAuthValue,
+                fieldToMatch: { singleHeader: { Name: 'authorization' } },
+                textTransformations: [{ priority: 0, type: 'NONE' }],
+                positionalConstraint: 'EXACTLY',
+              },
+            },
+          },
+        },
+        visibilityConfig: {
+          cloudWatchMetricsEnabled: true,
+          metricName: `btfp-${props.envConfig.envName}-basicauth`,
+          sampledRequestsEnabled: true,
+        },
+      });
+    }
+
     const webAcl = new wafv2.CfnWebACL(this, 'WebAcl', {
       scope: 'CLOUDFRONT',
       defaultAction: { allow: {} },
@@ -64,38 +134,18 @@ export class WebStack extends cdk.Stack {
         metricName: `btfp-${props.envConfig.envName}-waf`,
         sampledRequestsEnabled: true,
       },
-      rules: [
-        {
-          name: 'AWS-CommonRuleSet',
-          priority: 0,
-          overrideAction: { none: {} },
-          statement: {
-            managedRuleGroupStatement: {
-              vendorName: 'AWS',
-              name: 'AWSManagedRulesCommonRuleSet',
-            },
-          },
-          visibilityConfig: {
-            cloudWatchMetricsEnabled: true,
-            metricName: `btfp-${props.envConfig.envName}-common`,
-            sampledRequestsEnabled: true,
-          },
-        },
-        {
-          name: 'RateLimit',
-          priority: 1,
-          action: { block: {} },
-          statement: {
-            rateBasedStatement: { limit: 2000, aggregateKeyType: 'IP' },
-          },
-          visibilityConfig: {
-            cloudWatchMetricsEnabled: true,
-            metricName: `btfp-${props.envConfig.envName}-ratelimit`,
-            sampledRequestsEnabled: true,
-          },
-        },
-      ],
+      rules,
     });
+
+    // Extra layer for any crawler that (a) somehow has valid dev credentials
+    // and (b) actually respects these signals: tell it not to index anyway.
+    const noIndexPolicy = isProd
+      ? undefined
+      : new cloudfront.ResponseHeadersPolicy(this, 'NoIndexPolicy', {
+          customHeadersBehavior: {
+            customHeaders: [{ header: 'X-Robots-Tag', value: 'noindex, nofollow', override: true }],
+          },
+        });
 
     // HttpApi.apiEndpoint is "https://{id}.execute-api.{region}.amazonaws.com"; CloudFront needs just the host.
     const apiDomain = cdk.Fn.select(2, cdk.Fn.split('/', props.httpApi.apiEndpoint));
@@ -129,18 +179,22 @@ export class WebStack extends cdk.Stack {
         origin: origins.S3BucketOrigin.withOriginAccessControl(this.siteBucket),
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
+        responseHeadersPolicy: noIndexPolicy,
       },
       additionalBehaviors: {
-        '/api/*': { origin: apiOrigin, ...apiBehavior },
-        // Dynamic (queries live thing data) rather than a static file, so it
-        // can't be served from S3 like the rest of the site.
+        '/api/*': { origin: apiOrigin, ...apiBehavior, responseHeadersPolicy: noIndexPolicy },
+        // Both dynamic (content differs per stage, robots.txt via env var;
+        // sitemap enumerates live thing data) rather than static files, so
+        // they can't be served from S3 like the rest of the site.
         '/sitemap.xml': {
           origin: apiOrigin,
           ...apiBehavior,
+          responseHeadersPolicy: noIndexPolicy,
           functionAssociations: [
             { function: forwardHostFunction, eventType: cloudfront.FunctionEventType.VIEWER_REQUEST },
           ],
         },
+        '/robots.txt': { origin: apiOrigin, ...apiBehavior, responseHeadersPolicy: noIndexPolicy },
       },
       domainNames: allDomainNames,
       certificate,
