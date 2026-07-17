@@ -66,6 +66,15 @@ jobs:
           name: web-dist
           path: apps/web/dist
 
+      # TEMPORARY: diagnosing "Not authorized to perform
+      # sts:AssumeRoleWithWebIdentity" — print the actual aud/sub claims
+      # GitHub issues for this job so they can be compared directly against
+      # CiStack's trust policy condition. Remove once root-caused.
+      - name: Debug OIDC token claims
+        run: |
+          TOKEN=$(curl -sH "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com" | jq -r '.value')
+          echo "$TOKEN" | cut -d. -f2 | base64 -d 2>/dev/null | jq '{aud, sub, repository, ref, workflow}' || echo "$TOKEN" | cut -d. -f2
+
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
