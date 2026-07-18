@@ -36,18 +36,33 @@ is the fallback for hotfixes or debugging a broken pipeline).
    `cdk deploy BtfpProd/Web` a second time to sync the real per-route HTML — mirrors the manual
    two-pass deploy already documented in `docs/infra.md`, just automated.
 
+## Branch naming
+
+Prefix every branch with what kind of change it is:
+
+- `feat/` — new functionality
+- `fix/` — bug fix
+- `spike/` — throwaway exploration/prototype, not meant to ship as-is
+- `debt/` — refactor/cleanup/tech-debt paydown, no user-facing behavior change
+
+e.g. `feat/professional-verification`, `fix/logout-redirect-302`,
+`spike/agentcore-browser-eval`, `debt/oidc-trust-policy-cleanup`. Documentation-only for now —
+not enforced by `ci.yml` — easy to tighten into a required check later if naming drifts.
+
 ## How to ship a change
 
-1. Branch off `main`, make the change, push, open a PR. `ci.yml` runs automatically.
+1. Branch off `main` (named per [Branch naming](#branch-naming) above), make the change, push,
+   open a PR. `ci.yml` runs automatically.
 2. Once `CI / check` is green, merge. This is the only required step before `main` deploys
    itself — merging **is** the deploy trigger, there's no separate "now deploy" action.
 3. Watch it run: `gh run watch --repo GenomeInc/btfp` (or the
    [Actions tab](https://github.com/GenomeInc/btfp/actions)) picks up the newest run
    automatically. `build` → `deploy-dev` → `e2e` take a few minutes combined.
-4. If `e2e` fails, prod is never touched — fix forward with a new commit to `main` (small,
-   solo-maintainer repo; branch protection only requires the check, not a second reviewer) and
-   let the pipeline re-run from the top. Don't re-run the failed job in isolation — a later job
-   re-run without the earlier ones means it's no longer testing what will actually ship.
+4. If `e2e` fails, prod is never touched — fix forward with a new PR (same as step 1; direct
+   pushes to `main` aren't possible for anyone, admins included — see below) and let the
+   pipeline re-run from the top once it merges. Don't re-run the failed job in isolation — a
+   later job re-run without the earlier ones means it's no longer testing what will actually
+   ship.
 5. Once `e2e` and `prod-diff` are green, `deploy-prod` shows **Waiting** in the Actions UI — this
    is the approval gate, not a hang or a failure. Open the run, click into `deploy-prod`, hit
    **Review deployments**, read `prod-diff`'s summary (a real `cdk diff BtfpProd/*`, computed
@@ -161,7 +176,17 @@ Not automatable from CDK — these are GitHub repo settings.
 3. **`production` Environment** (Settings → Environments → New environment, name it
    `production`): add yourself as a required reviewer. This is the actual prod approval gate.
 4. **Branch protection on `main`** (Settings → Branches → Add rule): require the `CI / check`
-   status check before merging. No required second-reviewer — solo-maintainer repo.
+   status check before merging, and **enable "Include administrators"** (`enforce_admins`) —
+   without it, anyone with admin access can bypass the check and push straight to `main`,
+   silently defeating the whole point of requiring it. With this on, there is no direct-push
+   path for anyone; every change, including hotfixes, goes through a PR.
+5. **(Pending)** Require an actual approving review before merge, not just the `check` status —
+   passing CI was never meant to substitute for a human looking at the diff. Blocked on one
+   thing: PRs need to be authored by an identity other than the reviewer's own, since GitHub
+   never counts a PR author's own approval toward a required-review rule. Needs a dedicated
+   bot/machine GitHub account (or GitHub App) used only for opening PRs, distinct from whoever's
+   reviewing and merging them. Once that identity exists: Settings → Branches → edit the `main`
+   rule → enable "Require a pull request before merging" → "Require approvals" (1).
 
 ## Known accepted risks
 
