@@ -36,6 +36,62 @@ is the fallback for hotfixes or debugging a broken pipeline).
    `cdk deploy BtfpProd/Web` a second time to sync the real per-route HTML — mirrors the manual
    two-pass deploy already documented in `docs/infra.md`, just automated.
 
+## How to ship a change
+
+1. Branch off `main`, make the change, push, open a PR. `ci.yml` runs automatically.
+2. Once `CI / check` is green, merge. This is the only required step before `main` deploys
+   itself — merging **is** the deploy trigger, there's no separate "now deploy" action.
+3. Watch it run: `gh run watch --repo GenomeInc/btfp` (or the
+   [Actions tab](https://github.com/GenomeInc/btfp/actions)) picks up the newest run
+   automatically. `build` → `deploy-dev` → `e2e` take a few minutes combined.
+4. If `e2e` fails, prod is never touched — fix forward with a new commit to `main` (small,
+   solo-maintainer repo; branch protection only requires the check, not a second reviewer) and
+   let the pipeline re-run from the top. Don't re-run the failed job in isolation — a later job
+   re-run without the earlier ones means it's no longer testing what will actually ship.
+5. Once `e2e` and `prod-diff` are green, `deploy-prod` shows **Waiting** in the Actions UI — this
+   is the approval gate, not a hang or a failure. Open the run, click into `deploy-prod`, hit
+   **Review deployments**, read `prod-diff`'s summary (a real `cdk diff BtfpProd/*`, computed
+   *before* the gate so it's not blind), then **Approve and deploy**.
+6. `deploy-prod` finishes: same artifacts promoted, then prerender-against-live-prod-API, then
+   one more `cdk deploy BtfpProd/Web` to sync the real per-route HTML. Spot-check the live site
+   once it's done.
+
+For a hotfix that can't wait on CI, or to debug a broken pipeline, the manual `cdk deploy` path
+in [docs/infra.md](./infra.md) still works unchanged — this pipeline doesn't replace it, it
+automates the routine case.
+
+## Adding or changing who can approve production deploys
+
+The required-reviewer list on the `production` GitHub Environment is the only thing standing
+between `deploy-prod` and actually running — there's no equivalent gate in IAM (see
+[OIDC setup](#github-oidc-setup-for-aws) above). To add someone:
+
+- **UI**: repo Settings → Environments → `production` → under "Deployment protection rules",
+  edit "Required reviewers" → add the person (they need at least read access to the repo) →
+  Save protection rules.
+- **CLI**, if you'd rather script it — needs the person's numeric GitHub user ID, not their
+  login:
+  ```bash
+  NEW_REVIEWER_ID=$(gh api users/<their-username> --jq .id)
+  # Merge with whatever reviewers are already configured — this PUT replaces the whole list,
+  # it doesn't append.
+  gh api repos/GenomeInc/btfp/environments/production -X PUT --input - <<EOF
+  {
+    "reviewers": [
+      {"type": "User", "id": <existing-reviewer-id>},
+      {"type": "User", "id": $NEW_REVIEWER_ID}
+    ],
+    "deployment_branch_policy": {"protected_branches": true, "custom_branch_policies": false}
+  }
+  EOF
+  ```
+  A team works too: `{"type": "Team", "id": <team-id>}`, from `gh api orgs/GenomeInc/teams/<slug>
+  --jq .id` — usually the better call once this is more than a couple of people, since it
+  doesn't need a re-PUT every time membership changes.
+- To remove someone, PUT the same way with them left out of the `reviewers` array.
+- To check who's currently a reviewer without changing anything:
+  `gh api repos/GenomeInc/btfp/environments/production --jq '.protection_rules[] | select(.type=="required_reviewers") | .reviewers[].reviewer.login'`.
+
 ## Why promotion is a real guarantee, not just "the same source"
 
 CDK's Docker image assets (`DockerImageCode.fromImageAsset`) are content-hash-addressed: the
@@ -61,15 +117,19 @@ No long-lived AWS credentials are stored in GitHub at all. Instead:
   an unrelated AWS setup — IAM only allows one per URL per account, so this stack references it
   rather than creating a second one).
 - It creates one IAM role, `btfp-gha-deploy`. Its trust policy allows that OIDC provider to
-  assume it, but only when the token's `sub` claim matches
-  `repo:GenomeInc@32485630/btfp@1301972078:ref:refs/heads/main` — i.e. only a workflow run that
-  is an actual push to `main` can ever get credentials. (The `@<id>` suffixes are GitHub's
-  immutable org/repo IDs — confirmed empirically via a temporary debug step that printed the
-  real token, since the plain `owner/repo` form this was first written with doesn't match what
-  GitHub actually issues. Using the ID-suffixed form is also the safer match: it survives a
-  repo rename and can't be hijacked by transferring the name to a different org later.) A
-  PR-triggered run's token has a different `sub` (`repo:GenomeInc@.../btfp@...:pull_request`),
-  so `ci.yml` genuinely cannot assume this role even if it tried.
+  assume it, but only when the token's `sub` claim matches one of two patterns:
+  `repo:GenomeInc@32485630/btfp@1301972078:ref:refs/heads/main` (for `deploy-dev`/`prod-diff`,
+  which run as a plain push to `main`) or
+  `repo:GenomeInc@32485630/btfp@1301972078:environment:production` (for `deploy-prod`
+  specifically — a job with `environment:` set gets an *environment-scoped* `sub`, not the
+  ref-based one, regardless of what ref triggered it). Both were confirmed empirically, not
+  assumed from docs: a temporary debug step printed the real token each time, first showing the
+  `@<id>`-suffixed org/repo form (GitHub's immutable IDs — safer than plain names too, since it
+  survives a rename and can't be hijacked by transferring the name to a different org), then
+  showing deploy-prod's `sub` failing to assume-role against the ref-only pattern until the
+  `environment:production` pattern was added alongside it. A PR-triggered run's token matches
+  neither (`repo:GenomeInc@.../btfp@...:pull_request`), so `ci.yml` genuinely cannot assume this
+  role even if it tried.
 - The role's **only** permission is `sts:AssumeRole` on four existing CDK bootstrap roles
   (`deploy-role`, `file-publishing-role`, `image-publishing-role`, `lookup-role` — created once,
   already, by `cdk bootstrap`). It has no direct S3/Lambda/CloudFormation/ECR permissions of its

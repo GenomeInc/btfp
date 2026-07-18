@@ -50,8 +50,20 @@ export class CiStack extends cdk.Stack {
         // prod-deploy job (see docs/ci-cd.md) is the actual human-approval
         // gate for prod; this condition just keeps arbitrary branches out
         // entirely.
+        //
+        // Two patterns, not one: GitHub's sub claim format changes when a
+        // job specifies `environment:` — it becomes
+        // `repo:.../...:environment:<name>` instead of the ref-based form,
+        // regardless of what ref triggered it. deploy-dev/prod-diff (no
+        // `environment:`) send the ref form; deploy-prod (`environment:
+        // production`) sends the environment form. Confirmed empirically
+        // (deploy-prod failed assume-role with only the ref pattern
+        // present) rather than assumed from docs.
         StringLike: {
-          'token.actions.githubusercontent.com:sub': `repo:${GITHUB_REPO}:ref:refs/heads/main`,
+          'token.actions.githubusercontent.com:sub': [
+            `repo:${GITHUB_REPO}:ref:refs/heads/main`,
+            `repo:${GITHUB_REPO}:environment:production`,
+          ],
         },
       }),
     });
