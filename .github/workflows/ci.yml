@@ -23,6 +23,4 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - run: pnpm turbo run typecheck lint build
-
-      - run: pnpm run format:check
+      - run: pnpm turbo run typecheck build

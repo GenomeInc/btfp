@@ -22,8 +22,7 @@ jobs:
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
-      - run: pnpm turbo run typecheck lint build
-      - run: pnpm run format:check
+      - run: pnpm turbo run typecheck build
 
       # Uploaded once here and reused by every later job — the whole point
       # of this pipeline is that dev and prod run the exact same build, not

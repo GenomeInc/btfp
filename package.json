@@ -18,9 +18,11 @@
     "seed:local": "pnpm --filter @btfp/seed run seed:local",
     "cdk": "pnpm --filter @btfp/infra run cdk",
     "secrets:push": "pnpm --filter @btfp/infra run secrets:push",
-    "secrets:sync": "pnpm --filter @btfp/infra run secrets:sync"
+    "secrets:sync": "pnpm --filter @btfp/infra run secrets:sync",
+    "prepare": "lefthook install"
   },
   "devDependencies": {
+    "lefthook": "^1.13.6",
     "oxfmt": "^0.59.0",
     "oxlint": "^1.74.0",
     "turbo": "^2.3.0",

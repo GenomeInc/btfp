@@ -8,3 +8,4 @@ allowBuilds:
   '@nestjs/core': true
   '@scarf/scarf': false
   esbuild: true
+  lefthook: true

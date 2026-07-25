@@ -1,0 +1,18 @@
+# https://lefthook.dev — run `pnpm install` once to install hooks (prepare → lefthook install).
+pre-commit:
+  parallel: true
+  commands:
+    lint-format:
+      glob: "*.{js,jsx,ts,tsx,mjs,cjs}"
+      exclude:
+        - "**/dist/**"
+        - "**/dist-dev/**"
+        - "**/cdk.out/**"
+        - "**/.turbo/**"
+        - "**/node_modules/**"
+      run: |
+        if [ -n "{staged_files}" ]; then
+          pnpm exec oxlint -c .oxlintrc.json --fix {staged_files} &&
+          pnpm exec oxfmt --write {staged_files}
+        fi
+      stage_fixed: true
