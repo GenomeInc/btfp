@@ -7,7 +7,6 @@
     "dev": "vite",
     "build": "tsc -b --noEmit && vite build",
     "typecheck": "tsc -b --noEmit",
-    "lint": "oxlint -c ../../.oxlintrc.json src scripts",
     "prerender": "node scripts/prerender.mjs"
   },
   "dependencies": {

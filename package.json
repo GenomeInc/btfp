@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
-    "lint": "turbo run lint",
+    "lint": "oxlint -c .oxlintrc.json apps packages infra data vendor/mycota/packages",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "format": "oxfmt '**/*.{ts,tsx,js,mjs}' --ignore-path .gitignore",
@@ -19,7 +19,8 @@
     "cdk": "pnpm --filter @btfp/infra run cdk",
     "secrets:push": "pnpm --filter @btfp/infra run secrets:push",
     "secrets:sync": "pnpm --filter @btfp/infra run secrets:sync",
-    "prepare": "lefthook install"
+    "prepare": "lefthook install",
+    "mycota:ship": "bash scripts/ship-mycota.sh"
   },
   "devDependencies": {
     "lefthook": "^1.13.6",

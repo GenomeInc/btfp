@@ -6,8 +6,7 @@
   "scripts": {
     "generate": "tsx scripts/generate.ts",
     "test": "playwright test",
-    "typecheck": "tsc -b --noEmit",
-    "lint": "oxlint -c ../../.oxlintrc.json scripts playwright.config.ts"
+    "typecheck": "tsc -b --noEmit"
   },
   "dependencies": {
     "@aws-sdk/client-bedrock-runtime": "^3.716.0"
