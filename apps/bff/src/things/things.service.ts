@@ -6,8 +6,8 @@ import {
   DynamoDBDocumentClient,
 } from '@aws-sdk/lib-dynamodb';
 import type { Thing } from '@btfp/shared-types';
-import { DYNAMO_DOC_CLIENT, CONTENT_TABLE_NAME } from '../dynamo/dynamo.constants.js';
-import { stripDynamoKeys } from '../dynamo/dynamo.utils.js';
+import { DYNAMO_DOC_CLIENT, stripDynamoKeys } from '@mycota/dynamo';
+import { CONTENT_TABLE_NAME } from '../dynamo/dynamo.constants.js';
 import { SearchService } from '../search/search.service.js';
 
 @Injectable()

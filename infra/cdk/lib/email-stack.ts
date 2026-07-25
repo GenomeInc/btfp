@@ -49,6 +49,11 @@ export class EmailStack extends cdk.Stack {
 
     new ses.EmailIdentity(this, 'EmailIdentity', {
       identity: ses.Identity.publicHostedZone(hostedZone),
+      // mail.<domain> — own bounce/MAIL FROM domain instead of the shared
+      // amazonses.com default, for deliverability. DNS (MX + SPF) for this
+      // subdomain was set up manually in the SES console; this is what
+      // actually tells SES to use it.
+      mailFromDomain: `mail.${ROOT_DOMAIN}`,
     });
 
     new route53.MxRecord(this, 'InboundMx', {

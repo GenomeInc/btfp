@@ -4,6 +4,7 @@ import type { Thing } from '@btfp/shared-types';
 import { slugify } from '@btfp/shared-types';
 import { api } from '../lib/api.js';
 import { SeverityBadge } from '../components/SeverityBadge.js';
+import { SEVERITY_GUIDANCE } from '../lib/severity.js';
 import { useDocumentMeta } from '../lib/useDocumentMeta.js';
 import { useJsonLd } from '../lib/useJsonLd.js';
 import { SITE_NAME, SITE_ORIGIN } from '../lib/site.js';
@@ -80,14 +81,14 @@ export function ThingDetailPage() {
         <p className="mt-1 text-neutral-500">Also known as: {thing.otherNames.join(', ')}</p>
       )}
 
-      <div className="mt-4 flex flex-wrap gap-2">
+      <div className="mt-4 space-y-2">
         {thing.petTypes.map((p) => (
-          <span
-            key={p.petTypeId}
-            className="flex items-center gap-1 rounded-full bg-paw-50 px-3 py-1 text-sm capitalize"
-          >
-            {p.petTypeId} <SeverityBadge severity={p.severity} />
-          </span>
+          <div key={p.petTypeId} className="rounded-cozy border border-paw-100 bg-paw-50 px-4 py-2">
+            <div className="flex items-center gap-2 text-sm font-semibold text-neutral-700 capitalize">
+              {p.petTypeId} <SeverityBadge severity={p.severity} />
+            </div>
+            <p className="mt-1 text-sm text-neutral-600">{SEVERITY_GUIDANCE[p.severity]}</p>
+          </div>
         ))}
       </div>
 
@@ -111,6 +112,12 @@ export function ThingDetailPage() {
       )}
 
       <p className="mt-8 text-sm text-neutral-400">
+        <Link to={`/things/${thing.id}/edit`} className="text-paw-600 hover:underline">
+          Notice something missing or wrong? Suggest an edit →
+        </Link>
+      </p>
+
+      <p className="mt-2 text-sm text-neutral-400">
         Source: {thing.source}
         {thing.sourceUrl && (
           <>

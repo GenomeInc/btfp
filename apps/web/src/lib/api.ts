@@ -34,8 +34,8 @@ export const api = {
       method: 'POST',
       body: JSON.stringify({ questions, answers }),
     }),
-  submitContribution: (payload: Record<string, unknown>) =>
-    request('/contributions', { method: 'POST', body: JSON.stringify({ payload }) }),
+  submitContribution: (payload: Record<string, unknown>, thingId?: string) =>
+    request('/contributions', { method: 'POST', body: JSON.stringify({ thingId, payload }) }),
   listPendingContributions: () => request<unknown[]>('/contributions/pending'),
   requestProfessionalVerification: (email: string) =>
     request<{ orgClassification?: string }>('/verification/professional/request', {

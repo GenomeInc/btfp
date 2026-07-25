@@ -8,9 +8,10 @@ import {
   DynamoDBDocumentClient,
 } from '@aws-sdk/lib-dynamodb';
 import type { Contribution, Thing } from '@btfp/shared-types';
-import { DYNAMO_DOC_CLIENT, CONTENT_TABLE_NAME } from '../dynamo/dynamo.constants.js';
+import { DYNAMO_DOC_CLIENT } from '@mycota/dynamo';
+import { UsersService } from '@mycota/auth';
+import { CONTENT_TABLE_NAME } from '../dynamo/dynamo.constants.js';
 import { ThingsService } from '../things/things.service.js';
-import { UsersService } from '../auth/users.service.js';
 import type { CreateContributionDto } from './dto/create-contribution.dto.js';
 
 @Injectable()
@@ -72,23 +73,38 @@ export class ContributionsService {
 
     const now = new Date().toISOString();
     const contributor = await this.users.getById(contribution.contributorId);
-    const details = { ...contribution.payload.details };
+    // For an edit (contribution.thingId set), merge onto the real existing
+    // thing so fields the edit payload didn't touch survive. For a brand-new
+    // thing there's nothing to merge onto, so fall back to empty defaults.
+    const existingThing = contribution.thingId
+      ? await this.things.getById(contribution.thingId)
+      : null;
+    const base: Thing = existingThing ?? {
+      id: contribution.thingId ?? thingId,
+      name: 'Unnamed',
+      otherNames: [],
+      thingTypeId: 'unknown',
+      petTypes: [],
+      details: {},
+      source: `contributor:${contribution.contributorId}`,
+      verified: false,
+      createdAt: now,
+      updatedAt: now,
+    };
+
+    const details = { ...base.details, ...contribution.payload.details };
     if (contributor?.professional?.status === 'verified') {
       details.verifiedOrgDomain = contributor.professional.domain;
     }
 
     const thing: Thing = {
+      ...base,
+      ...contribution.payload,
       id: contribution.thingId ?? thingId,
-      name: contribution.payload.name ?? 'Unnamed',
-      otherNames: contribution.payload.otherNames ?? [],
-      thingTypeId: contribution.payload.thingTypeId ?? 'unknown',
-      petTypes: contribution.payload.petTypes ?? [],
       details,
-      source: contribution.payload.source ?? `contributor:${contribution.contributorId}`,
-      sourceUrl: contribution.payload.sourceUrl,
       verified: true,
       contributorId: contribution.contributorId,
-      createdAt: contribution.payload.createdAt ?? now,
+      createdAt: base.createdAt,
       updatedAt: now,
     };
     await this.things.putThing(thing);

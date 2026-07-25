@@ -6,8 +6,10 @@
   "scripts": {
     "build": "tsc -b",
     "typecheck": "tsc -b --noEmit",
-    "lint": "oxlint -c ../../.oxlintrc.json bin lib",
-    "cdk": "cdk"
+    "lint": "oxlint -c ../../.oxlintrc.json bin lib scripts",
+    "cdk": "cdk",
+    "secrets:push": "tsx scripts/secrets.ts push",
+    "secrets:sync": "tsx scripts/secrets.ts sync"
   },
   "devDependencies": {
     "@btfp/bff": "workspace:*",
@@ -17,6 +19,8 @@
     "typescript": "^5.8.0"
   },
   "dependencies": {
+    "@aws-sdk/client-ssm": "^3.716.0",
+    "@aws-sdk/client-sts": "^3.716.0",
     "aws-cdk-lib": "^2.261.0",
     "constructs": "^10.4.0",
     "source-map-support": "^0.5.21"

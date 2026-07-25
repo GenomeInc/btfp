@@ -1,9 +1,9 @@
 {
   "metadata": {
-    "title": "Curated product and activity hazards for pets",
-    "compiled": "2026-07-15",
-    "compiled_by": "Manually researched and summarized from ASPCA, AVMA, Pet Poison Helpline, CPSC, and Cornell/AAHA veterinary sources for this project — not scraped verbatim from any single page. See each entry's sourceUrl for the original.",
-    "disclaimer": "Not a substitute for veterinary care. For a suspected poisoning or injury, contact a veterinarian immediately."
+    "title": "Curated product, activity, and object hazards for pets",
+    "compiled": "2026-07-19",
+    "compiled_by": "Manually researched and summarized from ASPCA, AVMA, Pet Poison Helpline, CPSC, VCA Animal Hospitals, SignalPET, Veterinary Partner (VIN), and Cornell/AAHA veterinary sources for this project — not scraped verbatim from any single page. See each entry's sourceUrl for the original.",
+    "disclaimer": "Not a substitute for veterinary care. For a suspected poisoning or obstruction, contact a veterinarian immediately."
   },
   "entries": [
     {
@@ -75,6 +75,36 @@
       "notes": "Signs include excessive drooling, gulping, and vomiting (with or without blood).",
       "source": "ASPCA",
       "sourceUrl": "https://www.aspca.org/news/pet-poisons-be-mindful-these-household-products-and-cleaning-agents"
+    },
+    {
+      "name": "Socks",
+      "thingType": "object",
+      "petTypes": ["dog"],
+      "severity": "severe",
+      "hazard": "Whole socks are a leading cause of intestinal obstruction in dogs, especially small and medium breeds — most modern fabrics don't break down in the stomach, and a lodged sock can cut off blood supply to the intestine. Symptoms (vomiting, loss of appetite, lethargy, abdominal pain) can take 12-72 hours to appear, so a dog can look completely normal right after swallowing one even as a blockage forms underneath.",
+      "notes": "Don't wait to see if it passes on its own. If you saw or strongly suspect your dog swallowed a sock, call a vet immediately — caught early (before it leaves the stomach), it can sometimes be retrieved by inducing vomiting or endoscopy instead of surgery.",
+      "source": "VCA Animal Hospitals; VEG ER for Pets; Cornell University College of Veterinary Medicine",
+      "sourceUrl": "https://vcahospitals.com/know-your-pet/ingestion-of-foreign-bodies-in-dogs"
+    },
+    {
+      "name": "Underwear / elastic waistband clothing",
+      "thingType": "object",
+      "petTypes": ["dog"],
+      "severity": "severe",
+      "hazard": "Carries the same obstruction risk as socks, plus an added danger from the elastic waistband: it can act as a 'linear foreign body' — anchoring at one end (often under the tongue or further down the GI tract) while the intestines try to move the rest along, bunching (plicating) the gut around it. This can saw through the intestinal wall and cause a life-threatening perforation and infection.",
+      "notes": "If you see string-like material looped under your dog's tongue, do not pull on it — this can worsen internal damage. Get to a vet immediately either way, even before symptoms appear.",
+      "source": "SignalPET; Veterinary Partner (VIN); VCA Animal Hospitals",
+      "sourceUrl": "https://www.signalpet.com/linear-foreign-bodies/"
+    },
+    {
+      "name": "String, yarn, ribbon, dental floss, tinsel (linear foreign bodies)",
+      "thingType": "object",
+      "petTypes": ["dog", "cat"],
+      "severity": "severe",
+      "hazard": "Long, thin, flexible material is one of the most dangerous things a dog or cat can swallow — cats especially. One end often anchors under the tongue or in the stomach while the intestines try to pull the rest through, bunching (plicating) the intestines and sawing through the gut wall over time, which can lead to perforation and life-threatening peritonitis if untreated.",
+      "notes": "Never pull on visible string, especially if it disappears under the tongue — call a vet immediately instead. Early recognition is the biggest factor in survival.",
+      "source": "Veterinary Partner (VIN); SignalPET; Cornell University College of Veterinary Medicine",
+      "sourceUrl": "https://veterinarypartner.vin.com/default.aspx?pid=19239&id=6075371"
     }
   ]
 }

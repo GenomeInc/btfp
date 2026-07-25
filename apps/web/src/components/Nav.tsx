@@ -15,27 +15,29 @@ export function Nav() {
           <span aria-hidden>🐾</span>
           badthingsforpets
         </Link>
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm font-semibold text-paw-600">
-          <Link to="/submit" className="hover:underline">
-            <span className="hidden sm:inline">Add a thing</span>
-            <span className="sm:hidden">Add</span>
-          </Link>
-          {user?.verifiedContributor && (
-            <Link to="/moderation" className="hover:underline">
-              Moderation
+        <div className="mt-2 flex w-full flex-wrap items-center justify-between gap-x-3 gap-y-2 border-t border-paw-100 pt-2 text-sm font-semibold text-paw-600 sm:mt-0 sm:w-auto sm:border-0 sm:pt-0">
+          <div className="flex items-center gap-x-4">
+            <Link to="/submit" className="inline-block py-1.5 hover:underline">
+              <span className="hidden sm:inline">Add a thing</span>
+              <span className="sm:hidden">Add</span>
             </Link>
-          )}
+            {user?.verifiedContributor && (
+              <Link to="/moderation" className="inline-block py-1.5 hover:underline">
+                Moderation
+              </Link>
+            )}
+          </div>
           {user ? (
             <div className="flex items-center gap-2">
               <span className="max-w-[8rem] truncate rounded-full bg-paw-100 px-3 py-1 text-paw-600 sm:max-w-none">
                 Hi, {user.displayName}
               </span>
-              <a href="/api/auth/logout" className="hover:underline">
+              <a href="/api/auth/logout" className="inline-block py-1.5 hover:underline">
                 Sign out
               </a>
             </div>
           ) : (
-            <>
+            <div className="flex items-center gap-2">
               <EmailSignInDialog onSignedIn={refresh} />
               <a
                 href="/api/auth/github"
@@ -44,7 +46,7 @@ export function Nav() {
                 <span className="hidden sm:inline">Sign in with GitHub</span>
                 <span className="sm:hidden">GitHub</span>
               </a>
-            </>
+            </div>
           )}
         </div>
       </nav>

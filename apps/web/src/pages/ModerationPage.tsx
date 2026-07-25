@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import type { User } from '@btfp/shared-types';
 import { api } from '../lib/api.js';
 
@@ -47,6 +48,18 @@ function ContributionsSection() {
         <ul className="mt-4 space-y-3">
           {items.map((item) => (
             <li key={item.SK} className="rounded-cozy border border-paw-200 bg-white p-4">
+              {item.thingId ? (
+                <p className="text-xs font-semibold tracking-wide text-paw-500 uppercase">
+                  Edit →{' '}
+                  <Link to={`/things/${item.thingId}`} className="underline">
+                    view live entry
+                  </Link>
+                </p>
+              ) : (
+                <p className="text-xs font-semibold tracking-wide text-leaf-600 uppercase">
+                  New entry
+                </p>
+              )}
               <p className="font-semibold text-neutral-800">{item.payload.name}</p>
               <p className="text-sm text-neutral-500 capitalize">{item.payload.thingTypeId}</p>
               <button

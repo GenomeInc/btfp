@@ -1,0 +1,3 @@
+[submodule "vendor/mycota"]
+	path = vendor/mycota
+	url = https://github.com/GenomeInc/mycota.git

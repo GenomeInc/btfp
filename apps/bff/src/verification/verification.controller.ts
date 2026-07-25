@@ -1,10 +1,12 @@
 import { Body, Controller, ForbiddenException, Get, Logger, Post, UseGuards } from '@nestjs/common';
 import { VerificationService } from './verification.service.js';
-import { UsersService } from '../auth/users.service.js';
-import { AuthService } from '../auth/auth.service.js';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
-import { CurrentUser } from '../auth/current-user.decorator.js';
-import type { AuthenticatedUser } from '../auth/auth.types.js';
+import {
+  UsersService,
+  AuthService,
+  JwtAuthGuard,
+  CurrentUser,
+  type AuthenticatedUser,
+} from '@mycota/auth';
 import type { SubmitQuizDto } from './dto/submit-quiz.dto.js';
 
 const MIN_ACCOUNT_AGE_DAYS = Number(process.env.MIN_ACCOUNT_AGE_DAYS ?? 30);

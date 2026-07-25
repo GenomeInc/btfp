@@ -1,28 +1,50 @@
-import { useState, type FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState, type FormEvent } from 'react';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import type { Severity } from '@btfp/shared-types';
 import { useCurrentUser } from '../lib/useCurrentUser.js';
 import { api } from '../lib/api.js';
 import { QuizDialog } from '../components/QuizDialog.js';
 import { ProfessionalVerificationDialog } from '../components/ProfessionalVerificationDialog.js';
 import { EmailSignInDialog } from '../components/EmailSignInDialog.js';
 
-const THING_TYPES = ['plant', 'food', 'medication', 'product', 'activity'];
+const THING_TYPES = ['plant', 'food', 'medication', 'product', 'activity', 'object'];
 const PET_TYPES = ['dog', 'cat', 'horse'];
+const SEVERITIES: Severity[] = ['unknown', 'mild', 'moderate', 'severe'];
 
 export function SubmitPage() {
   const { user, loading, refresh } = useCurrentUser();
   const navigate = useNavigate();
+  const { id: editingId } = useParams<{ id: string }>();
+  const [searchParams] = useSearchParams();
 
-  const [name, setName] = useState('');
+  const [name, setName] = useState(searchParams.get('name') ?? '');
   const [thingTypeId, setThingTypeId] = useState('plant');
-  const [petTypeIds, setPetTypeIds] = useState<string[]>(['dog']);
+  const [petSeverities, setPetSeverities] = useState<Record<string, Severity>>({ dog: 'unknown' });
   const [notes, setNotes] = useState('');
   const [source, setSource] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
+  const [loadingThing, setLoadingThing] = useState(Boolean(editingId));
 
-  if (loading) return <div className="mx-auto max-w-xl px-4 py-10 text-neutral-400">Loading…</div>;
+  useEffect(() => {
+    if (!editingId) return;
+    setLoadingThing(true);
+    api
+      .getThing(editingId)
+      .then((thing) => {
+        setName(thing.name);
+        setThingTypeId(thing.thingTypeId);
+        setPetSeverities(Object.fromEntries(thing.petTypes.map((p) => [p.petTypeId, p.severity])));
+        setNotes(typeof thing.details.notes === 'string' ? thing.details.notes : '');
+        setSource(thing.source);
+      })
+      .catch((err: Error) => setError(err.message))
+      .finally(() => setLoadingThing(false));
+  }, [editingId]);
+
+  if (loading || loadingThing)
+    return <div className="mx-auto max-w-xl px-4 py-10 text-neutral-400">Loading…</div>;
 
   if (!user) {
     return (
@@ -73,7 +95,7 @@ export function SubmitPage() {
         <h1 className="text-2xl font-bold text-neutral-800">One quick step first</h1>
         <p className="mt-2 text-neutral-500">
           Clear our pet-safety pop quiz, or verify a work email if you're a vet or scientist —
-          either unlocks adding entries.
+          either unlocks adding and editing entries.
         </p>
         {wasRejected && (
           <p className="mt-2 text-sm text-alert-600">
@@ -95,13 +117,15 @@ export function SubmitPage() {
       <div className="mx-auto max-w-xl px-4 py-16 text-center">
         <h1 className="text-2xl font-bold text-neutral-800">Thanks! 🐾</h1>
         <p className="mt-2 text-neutral-500">
-          Your submission is in the moderation queue for review.
+          {editingId
+            ? 'Your edit is in the moderation queue for review.'
+            : 'Your submission is in the moderation queue for review.'}
         </p>
         <button
-          onClick={() => navigate('/')}
+          onClick={() => navigate(editingId ? `/things/${editingId}` : '/')}
           className="mt-6 rounded-full bg-paw-500 px-6 py-3 font-semibold text-white"
         >
-          Back home
+          {editingId ? 'Back to entry' : 'Back home'}
         </button>
       </div>
     );
@@ -113,9 +137,13 @@ export function SubmitPage() {
     setError(null);
     try {
       await api.submitContribution({
+        ...(editingId ? { thingId: editingId } : {}),
         name,
         thingTypeId,
-        petTypes: petTypeIds.map((petTypeId) => ({ petTypeId, severity: 'unknown' })),
+        petTypes: Object.entries(petSeverities).map(([petTypeId, severity]) => ({
+          petTypeId,
+          severity,
+        })),
         details: { notes },
         source: source || `contributor:${user?.displayName}`,
       });
@@ -128,12 +156,25 @@ export function SubmitPage() {
   }
 
   function togglePetType(id: string) {
-    setPetTypeIds((prev) => (prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id]));
+    setPetSeverities((prev) => {
+      if (id in prev) {
+        const next = { ...prev };
+        delete next[id];
+        return next;
+      }
+      return { ...prev, [id]: 'unknown' };
+    });
+  }
+
+  function setSeverityFor(id: string, severity: Severity) {
+    setPetSeverities((prev) => ({ ...prev, [id]: severity }));
   }
 
   return (
     <div className="mx-auto max-w-xl px-4 py-10">
-      <h1 className="text-2xl font-bold text-neutral-800">Add a dangerous thing</h1>
+      <h1 className="text-2xl font-bold text-neutral-800">
+        {editingId ? `Edit ${name || 'this entry'}` : 'Add a dangerous thing'}
+      </h1>
       <form onSubmit={handleSubmit} className="mt-6 space-y-5">
         <div>
           <label htmlFor="thing-name" className="block text-sm font-semibold text-neutral-700">
@@ -168,16 +209,34 @@ export function SubmitPage() {
 
         <div>
           <label className="block text-sm font-semibold text-neutral-700">Dangerous for</label>
-          <div className="mt-1 flex gap-3">
+          <p className="mt-1 text-xs text-neutral-400">
+            Pick a severity per pet — this drives the vet-urgency guidance shown on the entry page.
+          </p>
+          <div className="mt-2 space-y-2">
             {PET_TYPES.map((pt) => (
-              <label key={pt} className="flex items-center gap-1 text-sm capitalize">
-                <input
-                  type="checkbox"
-                  checked={petTypeIds.includes(pt)}
-                  onChange={() => togglePetType(pt)}
-                />
-                {pt}
-              </label>
+              <div key={pt} className="flex flex-wrap items-center gap-3">
+                <label className="flex items-center gap-1 text-sm capitalize">
+                  <input
+                    type="checkbox"
+                    checked={pt in petSeverities}
+                    onChange={() => togglePetType(pt)}
+                  />
+                  {pt}
+                </label>
+                {pt in petSeverities && (
+                  <select
+                    value={petSeverities[pt]}
+                    onChange={(e) => setSeverityFor(pt, e.target.value as Severity)}
+                    className="rounded-lg border border-paw-200 px-2 py-1 text-sm capitalize"
+                  >
+                    {SEVERITIES.map((s) => (
+                      <option key={s} value={s}>
+                        {s}
+                      </option>
+                    ))}
+                  </select>
+                )}
+              </div>
             ))}
           </div>
         </div>
@@ -213,10 +272,16 @@ export function SubmitPage() {
 
         <button
           type="submit"
-          disabled={submitting || petTypeIds.length === 0}
+          disabled={submitting || Object.keys(petSeverities).length === 0}
           className="w-full rounded-full bg-paw-500 px-6 py-3 font-semibold text-white disabled:opacity-50"
         >
-          {submitting ? 'Submitting…' : 'Submit for review'}
+          {submitting
+            ? editingId
+              ? 'Submitting edit…'
+              : 'Submitting…'
+            : editingId
+              ? 'Submit edit for review'
+              : 'Submit for review'}
         </button>
       </form>
     </div>

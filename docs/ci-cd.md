@@ -7,13 +7,14 @@ is the fallback for hotfixes or debugging a broken pipeline).
 
 ## The path a change takes
 
-1. **Branch, PR into `main`.** `.github/workflows/ci.yml` runs typecheck/lint/build/format-check
-   on the PR. No AWS credentials exist anywhere in this workflow — PRs can't deploy anything,
-   by construction (see [OIDC setup](#github-oidc-setup-for-aws) below).
+1. **Branch, PR into `main`.** `.github/workflows/ci.yml` runs typecheck/build on the PR.
+   Lint and format are enforced locally via [Lefthook](contributing.md#git-hooks-lefthook) on
+   commit, not re-checked in CI. No AWS credentials exist anywhere in this workflow — PRs can't
+   deploy anything, by construction (see [OIDC setup](#github-oidc-setup-for-aws) below).
 2. **Merge.** `main` requires the `CI / check` status to pass first (branch protection, set up
    once — see [Manual one-time setup](#manual-one-time-setup)). Merging triggers
    `.github/workflows/deploy.yml`.
-3. **`build`** — installs, builds every package (`turbo run typecheck lint build`), uploads
+3. **`build`** — installs, builds every package (`turbo run typecheck build`), uploads
    `apps/bff/dist` and `apps/web/dist` as GitHub Actions artifacts. Every later job downloads
    these instead of rebuilding — this is what makes "the same thing promoted to prod" literally
    true, not just "the same source re-built twice."

@@ -2,10 +2,20 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ScanCommand, DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 import Fuse from 'fuse.js';
 import type { Thing } from '@btfp/shared-types';
-import { DYNAMO_DOC_CLIENT, CONTENT_TABLE_NAME } from '../dynamo/dynamo.constants.js';
-import { stripDynamoKeys } from '../dynamo/dynamo.utils.js';
+import { DYNAMO_DOC_CLIENT, stripDynamoKeys } from '@mycota/dynamo';
+import { CONTENT_TABLE_NAME } from '../dynamo/dynamo.constants.js';
+import { COMMON_THING_NAMES } from './common-things.js';
 
 const CACHE_TTL_MS = 60_000;
+
+/** Common things first (alphabetical among themselves), then the rest alphabetically. */
+function sortByCommonality(things: Thing[]): Thing[] {
+  return [...things].sort((a, b) => {
+    const commonDiff =
+      Number(COMMON_THING_NAMES.has(b.name)) - Number(COMMON_THING_NAMES.has(a.name));
+    return commonDiff !== 0 ? commonDiff : a.name.localeCompare(b.name);
+  });
+}
 
 /**
  * Loads all Things into memory and searches/filters there instead of paying
@@ -19,12 +29,14 @@ export class SearchService {
   constructor(@Inject(DYNAMO_DOC_CLIENT) private readonly db: DynamoDBDocumentClient) {}
 
   async all(): Promise<Thing[]> {
-    return this.loadThings();
+    return sortByCommonality(await this.loadThings());
   }
 
   async filterByPetType(petTypeId: string): Promise<Thing[]> {
     const things = await this.loadThings();
-    return things.filter((t) => t.petTypes.some((p) => p.petTypeId === petTypeId));
+    return sortByCommonality(
+      things.filter((t) => t.petTypes.some((p) => p.petTypeId === petTypeId)),
+    );
   }
 
   async search(

@@ -69,6 +69,27 @@ account" until it's done. Not automatable; submit it from the Bedrock console (M
 access page). `BedrockClassifierService` degrades gracefully without it — the domain
 classification is just skipped, org-email verification still works.
 
+## Secrets
+
+Real secret values live in AWS SSM Parameter Store (SecureString), under
+`/btfp/dev/*`, `/btfp/prod/*`, and `/btfp/shared/*` (plus the standalone
+`/btfp/github-client-secret`, prod-only, referenced but not managed by CDK
+— see `GITHUB_CLIENT_SECRET_PARAM_NAME` in `infra/cdk/lib/config.ts`).
+That's the source of truth, not any local file.
+
+- `pnpm secrets:sync dev` / `pnpm secrets:sync prod` — pulls current values
+  down into `infra/cdk/.env.deploy.local` (and, for `dev`, also updates
+  `JWT_SECRET`/`GITHUB_CLIENT_SECRET` in `apps/bff/.env` if that file
+  exists). Run this on a new machine instead of hand-typing values from
+  memory.
+- `pnpm secrets:push dev` / `pnpm secrets:push prod` — the reverse: reads
+  `infra/cdk/.env.deploy.local` and writes any real (non-placeholder) values
+  up to SSM. Use this after rotating a secret locally.
+
+Both need AWS credentials (`aws sso login --profile <your-profile>` first —
+same as [Deploy order](#deploy-order) below). See
+`infra/cdk/scripts/secrets.ts` for the exact key mapping.
+
 ## Dev is not public
 
 Dev isn't meant to be indexed, crawled, or generally reachable — it's a working environment,
@@ -78,7 +99,10 @@ request (site and API alike), returns `Disallow: /` from `robots.txt`, and sends
 [LLM ingestibility](#llm-ingestibility) below for why prod deliberately goes the other way.
 
 Real credentials live in `infra/cdk/.env.deploy.local` (gitignored — never commit real
-values). Load them before running any `cdk` command against dev:
+values; see [Secrets](#secrets) above for how they get there). Load them before running any
+`cdk` command against dev — with [direnv](https://direnv.net) set up (`infra/cdk/.envrc` is
+already in the repo, just `direnv allow` once), `cd infra/cdk` loads them automatically.
+Without direnv, load them by hand instead:
 
 ```bash
 cd infra/cdk
@@ -122,8 +146,8 @@ hand.
    --filter @btfp/web run prerender` — crawls the just-built `dist/` and saves real
    per-route rendered HTML for crawlers. See [docs/seo.md](./seo.md). Skip for dev — it's
    not meant to be crawled/indexed at all.
-10. For dev: load `infra/cdk/.env.deploy.local` (see above) before deploying — the Basic
-    Auth password comes from there. For prod, no extra env vars needed.
+10. For dev: load `infra/cdk/.env.deploy.local` (see [Secrets](#secrets) above) before
+    deploying — the Basic Auth password comes from there. For prod, no extra env vars needed.
 11. `pnpm --filter @btfp/infra cdk deploy BtfpDev/* BtfpProd/*`
 
 The Bedrock inference profile id (`BEDROCK_INFERENCE_PROFILE_ID` in `config.ts`) is

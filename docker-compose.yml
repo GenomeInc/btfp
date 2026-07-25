@@ -1,6 +1,10 @@
 services:
   dynamodb-local:
     image: amazon/dynamodb-local:latest
+    # The image's default user (uid 1000) can't write to a freshly created
+    # named volume — Docker mounts it root-owned, so DynamoDB Local's SQLite
+    # backend fails with "unable to open database file" without this.
+    user: root
     ports:
       - "8000:8000"
     command: ["-jar", "DynamoDBLocal.jar", "-sharedDb", "-dbPath", "/data"]

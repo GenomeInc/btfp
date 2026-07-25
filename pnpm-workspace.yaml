@@ -3,7 +3,9 @@ packages:
   - "packages/*"
   - "infra/*"
   - "data/*"
+  - "vendor/mycota/packages/*"
 allowBuilds:
   '@nestjs/core': true
   '@scarf/scarf': false
   esbuild: true
+  lefthook: true

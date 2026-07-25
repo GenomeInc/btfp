@@ -1,8 +1,6 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ContributionsService } from './contributions.service.js';
-import { VerifiedGuard } from '../auth/verified.guard.js';
-import { CurrentUser } from '../auth/current-user.decorator.js';
-import type { AuthenticatedUser } from '../auth/auth.types.js';
+import { VerifiedGuard, CurrentUser, type AuthenticatedUser } from '@mycota/auth';
 import type { CreateContributionDto } from './dto/create-contribution.dto.js';
 
 @Controller('contributions')

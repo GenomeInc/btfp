@@ -100,6 +100,14 @@ export const THING_TYPES: ThingType[] = [
     createdAt: '',
     updatedAt: '',
   },
+  {
+    id: 'object',
+    name: 'Object',
+    description: 'Non-food items pets swallow — choking and obstruction risk, not toxicity.',
+    details: {},
+    createdAt: '',
+    updatedAt: '',
+  },
 ].map(stamp);
 
 export function transformDataset(raw: RawDataset): Thing[] {
@@ -182,7 +190,7 @@ export interface CuratedHazardsDataset {
 
 interface CuratedHazardEntry {
   name: string;
-  thingType: 'product' | 'activity';
+  thingType: 'product' | 'activity' | 'object';
   petTypes: string[];
   severity: Severity;
   hazard: string;

@@ -1,11 +1,14 @@
 import { Route, Routes } from 'react-router-dom';
 import { Nav } from './components/Nav.js';
 import { Footer } from './components/Footer.js';
+import { AddFab } from './components/AddFab.js';
 import { HomePage } from './pages/HomePage.js';
 import { ThingDetailPage } from './pages/ThingDetailPage.js';
 import { SubmitPage } from './pages/SubmitPage.js';
 import { ModerationPage } from './pages/ModerationPage.js';
 import { LlmInfoPage } from './pages/LlmInfoPage.js';
+import { PrivacyPage } from './pages/PrivacyPage.js';
+import { TermsPage } from './pages/TermsPage.js';
 import { useJsonLd } from './lib/useJsonLd.js';
 import { SITE_DESCRIPTION, SITE_NAME, SITE_ORIGIN } from './lib/site.js';
 
@@ -40,11 +43,15 @@ export function App() {
               :id, so a missing/stale/wrong slug still resolves correctly. */}
           <Route path="/things/:id/:slug?" element={<ThingDetailPage />} />
           <Route path="/submit" element={<SubmitPage />} />
+          <Route path="/things/:id/edit" element={<SubmitPage />} />
           <Route path="/moderation" element={<ModerationPage />} />
           <Route path="/llm-info" element={<LlmInfoPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/terms" element={<TermsPage />} />
         </Routes>
       </main>
       <Footer />
+      <AddFab />
     </div>
   );
 }
