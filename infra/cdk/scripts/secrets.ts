@@ -72,7 +72,9 @@ function isPlaceholder(value: string | undefined): boolean {
 
 function setEnvLine(content: string, key: string, value: string): string {
   const re = new RegExp(`^${key}=.*$`, 'm');
-  return re.test(content) ? content.replace(re, `${key}=${value}`) : `${content.trimEnd()}\n${key}=${value}\n`;
+  return re.test(content)
+    ? content.replace(re, `${key}=${value}`)
+    : `${content.trimEnd()}\n${key}=${value}\n`;
 }
 
 async function requireCallerIdentity(): Promise<void> {
@@ -172,7 +174,8 @@ async function sync(env: Env): Promise<void> {
     let bffContent = readFileSync(BFF_ENV_PATH, 'utf-8');
     const jwtSecret = values.get('/btfp/dev/jwt-secret');
     if (jwtSecret) bffContent = setEnvLine(bffContent, 'JWT_SECRET', jwtSecret);
-    if (githubClientSecret) bffContent = setEnvLine(bffContent, 'GITHUB_CLIENT_SECRET', githubClientSecret);
+    if (githubClientSecret)
+      bffContent = setEnvLine(bffContent, 'GITHUB_CLIENT_SECRET', githubClientSecret);
     writeFileSync(BFF_ENV_PATH, bffContent);
     console.log('Updated JWT_SECRET / GITHUB_CLIENT_SECRET in apps/bff/.env');
   }

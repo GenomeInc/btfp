@@ -11,7 +11,8 @@ const CACHE_TTL_MS = 60_000;
 /** Common things first (alphabetical among themselves), then the rest alphabetically. */
 function sortByCommonality(things: Thing[]): Thing[] {
   return [...things].sort((a, b) => {
-    const commonDiff = Number(COMMON_THING_NAMES.has(b.name)) - Number(COMMON_THING_NAMES.has(a.name));
+    const commonDiff =
+      Number(COMMON_THING_NAMES.has(b.name)) - Number(COMMON_THING_NAMES.has(a.name));
     return commonDiff !== 0 ? commonDiff : a.name.localeCompare(b.name);
   });
 }
@@ -33,7 +34,9 @@ export class SearchService {
 
   async filterByPetType(petTypeId: string): Promise<Thing[]> {
     const things = await this.loadThings();
-    return sortByCommonality(things.filter((t) => t.petTypes.some((p) => p.petTypeId === petTypeId)));
+    return sortByCommonality(
+      things.filter((t) => t.petTypes.some((p) => p.petTypeId === petTypeId)),
+    );
   }
 
   async search(

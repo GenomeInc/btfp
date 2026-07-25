@@ -15,9 +15,9 @@ export function PrivacyPage() {
 
       <p className="mt-6">
         badthingsforpets.com is operated by GenomeInc ("we," "us"). This page describes what we
-        collect through the site, why, and who we share it with. Searching and browsing the
-        database doesn't require an account or collect anything beyond standard web server
-        activity. Everything below applies once you sign in to contribute.
+        collect through the site, why, and who we share it with. Searching and browsing the database
+        doesn't require an account or collect anything beyond standard web server activity.
+        Everything below applies once you sign in to contribute.
       </p>
 
       <h2 className="mt-8 text-xl font-bold text-neutral-800">What we collect</h2>
@@ -29,8 +29,8 @@ export function PrivacyPage() {
         </li>
         <li>
           <strong>If you sign in with a work email instead:</strong> the email address itself and a
-          one-time verification code (the code is hashed before storage and expires after 15
-          minutes — we never keep it in plain text).
+          one-time verification code (the code is hashed before storage and expires after 15 minutes
+          — we never keep it in plain text).
         </li>
         <li>
           <strong>If you request organizational (vet/scientist) verification:</strong> the domain of
@@ -57,18 +57,17 @@ export function PrivacyPage() {
 
       <h2 className="mt-8 text-xl font-bold text-neutral-800">Who we share it with</h2>
       <p className="mt-3">
-        We don't sell or rent your data. It passes through the service providers that make the
-        site work: GitHub or Google (if you use their sign-in), Amazon Web Services (hosting,
-        database, and the Bedrock model used for organization classification), Amazon SES (sending
-        verification code emails), and the Brave Search API (the web-search signal described
-        above). Each only sees what's needed to do its job.
+        We don't sell or rent your data. It passes through the service providers that make the site
+        work: GitHub or Google (if you use their sign-in), Amazon Web Services (hosting, database,
+        and the Bedrock model used for organization classification), Amazon SES (sending
+        verification code emails), and the Brave Search API (the web-search signal described above).
+        Each only sees what's needed to do its job.
       </p>
 
       <h2 className="mt-8 text-xl font-bold text-neutral-800">How long we keep it</h2>
       <p className="mt-3">
-        Account and contribution records are kept as long as your account exists. Verification
-        codes expire in 15 minutes regardless of use. To request deletion of your account or
-        data, email{' '}
+        Account and contribution records are kept as long as your account exists. Verification codes
+        expire in 15 minutes regardless of use. To request deletion of your account or data, email{' '}
         <a href="mailto:john@badthingsforpets.com" className="text-paw-600 underline">
           john@badthingsforpets.com
         </a>
@@ -77,8 +76,8 @@ export function PrivacyPage() {
 
       <h2 className="mt-8 text-xl font-bold text-neutral-800">Children's privacy</h2>
       <p className="mt-3">
-        This site isn't directed at children, and we don't knowingly collect information from
-        anyone under 13.
+        This site isn't directed at children, and we don't knowingly collect information from anyone
+        under 13.
       </p>
 
       <h2 className="mt-8 text-xl font-bold text-neutral-800">Changes to this policy</h2>

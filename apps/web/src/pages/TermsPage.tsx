@@ -20,8 +20,8 @@ export function TermsPage() {
       </p>
 
       <p className="mt-6">
-        These terms govern your use of badthingsforpets.com, operated by GenomeInc ("we," "us").
-        By using the site you agree to them. If you don't agree, please don't use the site.
+        These terms govern your use of badthingsforpets.com, operated by GenomeInc ("we," "us"). By
+        using the site you agree to them. If you don't agree, please don't use the site.
       </p>
 
       <h2 className="mt-8 text-xl font-bold text-neutral-800">The service</h2>
@@ -43,8 +43,8 @@ export function TermsPage() {
 
       <h2 className="mt-8 text-xl font-bold text-neutral-800">Contributions</h2>
       <p className="mt-3">
-        By submitting or editing an entry, you confirm you have the right to share it and grant us
-        a license to publish, edit, and distribute it as part of the site. We review submissions
+        By submitting or editing an entry, you confirm you have the right to share it and grant us a
+        license to publish, edit, and distribute it as part of the site. We review submissions
         before they go live and may edit, reject, or remove any contribution at our discretion,
         including after publication. We don't guarantee the accuracy of any entry, contributed or
         otherwise — always verify anything urgent with a veterinarian or a source like the ASPCA
@@ -77,7 +77,9 @@ export function TermsPage() {
       </p>
 
       <h2 className="mt-8 text-xl font-bold text-neutral-800">Governing law</h2>
-      <p className="mt-3">These terms are governed by the laws of the State of North Carolina, USA.</p>
+      <p className="mt-3">
+        These terms are governed by the laws of the State of North Carolina, USA.
+      </p>
 
       <h2 className="mt-8 text-xl font-bold text-neutral-800">Changes to these terms</h2>
       <p className="mt-3">
