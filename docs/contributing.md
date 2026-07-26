@@ -46,7 +46,8 @@ If hooks are missing (new clone, skipped `pnpm install`), run `pnpm exec lefthoo
 that repo’s root. To bypass once: `git commit --no-verify` (use sparingly — CI still runs
 typecheck/build on the whole tree).
 
-Manual full-tree checks when you need them: `pnpm run lint`, `pnpm run format` (btfp or mycota).
+Manual full-tree checks when you need them: `pnpm run lint`, `pnpm run format` (each repo root —
+not turbo tasks). Day-to-day lint/format happen in **Lefthook** on commit.
 
 ## Working on mycota (submodule dependency)
 
@@ -73,15 +74,39 @@ was built against.
 3. **Push mycota** — when you’re satisfied, commit and push **from `vendor/mycota`** to
    [GenomeInc/mycota](https://github.com/GenomeInc/mycota) (feature branch or `main`, per team
    practice). mycota’s CI runs `pnpm turbo run typecheck build test` (lint/format are hook-only).
-4. **Pin the commit in btfp** — back at the btfp root, commit the submodule pointer update (and any
-   btfp-only wiring: BFF config, infra, lockfile):
+4. **Pin the commit in btfp** — the parent repo does not track files inside the submodule; it
+   records **one gitlink** (a commit SHA). After mycota has a commit at `HEAD`:
 
    ```bash
-   cd vendor/mycota && git rev-parse HEAD   # note the SHA you’re pinning
+   cd vendor/mycota && git rev-parse HEAD   # the SHA you’re pinning
    cd ../..
-   git add vendor/mycota
+   git add vendor/mycota                    # stages that SHA — not individual files under vendor/
    git commit -m "Bump mycota to <short-sha> (<what changed>)"
    ```
+
+   `git status` at the btfp root may show `modified: vendor/mycota (new commits)` when you’ve
+   committed inside the submodule but haven’t updated the pointer yet — that’s the signal to
+   `git add vendor/mycota`.
+
+   **One command** (commit dirty mycota if needed, push mycota, bump pointer, push btfp):
+
+   ```bash
+   pnpm mycota:ship -- "feat(cdk): ephemeral config construct" "Bump mycota (ephemeral config)"
+   ```
+
+   Omit the second message to default to `Bump mycota to <short-sha>`. Flags: `--no-push`
+   (local commits only), `--mycota-only`, `--btfp-only` (pointer bump when mycota is already
+   pushed). Script: `scripts/ship-mycota.sh`.
+
+   **Separate commits:** `mycota:ship` only creates a btfp commit for `vendor/mycota` (the
+   submodule SHA). Changes under `apps/`, `infra/`, `packages/`, etc. stay uncommitted — commit
+   those in a follow-up (or beforehand). If other paths are already staged in btfp, the script
+   exits with an error so they are not accidentally bundled into the bump commit.
+
+   **CI:** btfp checks out `vendor/mycota` by commit SHA. That commit must exist on
+   [GenomeInc/mycota](https://github.com/GenomeInc/mycota) (push the mycota branch before or with
+   the btfp pointer bump). Otherwise Actions fails with `upload-pack: not our ref` during
+   submodule fetch.
 
 5. **Open a btfp PR** — includes the pointer bump plus app/infra changes. btfp CI checks out
    submodules and runs turbo typecheck/build over the **pinned tree**, so integration breaks

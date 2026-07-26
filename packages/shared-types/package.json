@@ -13,8 +13,7 @@
   },
   "scripts": {
     "build": "tsc -b",
-    "typecheck": "tsc -b --noEmit",
-    "lint": "oxlint -c ../../.oxlintrc.json src"
+    "typecheck": "tsc -b --noEmit"
   },
   "devDependencies": {
     "typescript": "^5.8.0"

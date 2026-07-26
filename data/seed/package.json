@@ -5,8 +5,7 @@
   "type": "module",
   "scripts": {
     "seed:local": "tsx src/run.ts --endpoint http://localhost:8000",
-    "typecheck": "tsc -b --noEmit",
-    "lint": "oxlint -c ../../.oxlintrc.json src"
+    "typecheck": "tsc -b --noEmit"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.716.0",
