@@ -10,13 +10,18 @@ jobs:
     # No AWS credentials anywhere in this job, deliberately — PR-triggered
     # runs can never get standing account access. See docs/ci-cd.md.
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
-          submodules: true
+          fetch-depth: 0
+          # checkout's built-in submodule fetch uses --depth=1, which misses pinned
+          # SHAs that only exist on a mycota feature branch — init fully below.
+          submodules: false
 
-      - uses: pnpm/action-setup@v4
+      - run: git submodule update --init --recursive --depth=0
 
-      - uses: actions/setup-node@v4
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: pnpm
