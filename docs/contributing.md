@@ -103,6 +103,11 @@ was built against.
    those in a follow-up (or beforehand). If other paths are already staged in btfp, the script
    exits with an error so they are not accidentally bundled into the bump commit.
 
+   **CI:** btfp checks out `vendor/mycota` by commit SHA. That commit must exist on
+   [GenomeInc/mycota](https://github.com/GenomeInc/mycota) (push the mycota branch before or with
+   the btfp pointer bump). Otherwise Actions fails with `upload-pack: not our ref` during
+   submodule fetch.
+
 5. **Open a btfp PR** — includes the pointer bump plus app/infra changes. btfp CI checks out
    submodules and runs turbo typecheck/build over the **pinned tree**, so integration breaks
    show up here even though mycota already passed its own CI.

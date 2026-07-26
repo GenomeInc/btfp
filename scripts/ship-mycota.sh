@@ -59,6 +59,18 @@ abort_if_staged_outside_submodule() {
   fi
 }
 
+ensure_mycota_on_origin() {
+  local sha="$1"
+  if [[ "$NO_PUSH" == true ]]; then
+    return 0
+  fi
+  if ! git -C "$MYCOTA" ls-remote origin "$sha" | grep -q "$sha"; then
+    echo "error: mycota commit $sha is not on origin — btfp CI will fail with \"not our ref\" on submodule checkout." >&2
+    echo "  cd vendor/mycota && git push origin HEAD" >&2
+    exit 1
+  fi
+}
+
 if [[ "$BTFP_ONLY" != true ]]; then
   if [[ -z "$MYCOTA_MSG" ]]; then
     echo "Usage: pnpm mycota:ship -- \"<mycota commit message>\" [\"<btfp bump message>\"]" >&2
@@ -107,6 +119,8 @@ fi
 if [[ -z "$BTFP_MSG" ]]; then
   BTFP_MSG="Bump mycota to ${SHA}"
 fi
+
+ensure_mycota_on_origin "$FULL_SHA"
 
 cd "$ROOT"
 abort_if_staged_outside_submodule
