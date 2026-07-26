@@ -12,11 +12,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
-          submodules: true
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+          fetch-depth: 0
+          submodules: false
+      - run: git submodule update --init --recursive --depth=0
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: pnpm
@@ -27,11 +29,11 @@ jobs:
       # Uploaded once here and reused by every later job — the whole point
       # of this pipeline is that dev and prod run the exact same build, not
       # two separate builds of the same source. See docs/ci-cd.md.
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: bff-dist
           path: apps/bff/dist
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: web-dist
           path: apps/web/dist
@@ -50,26 +52,28 @@ jobs:
       BTFP_PROD_JWT_SECRET: ${{ secrets.BTFP_PROD_JWT_SECRET }}
       BTFP_BRAVE_SEARCH_API_KEY: ${{ secrets.BTFP_BRAVE_SEARCH_API_KEY }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
-          submodules: true
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+          fetch-depth: 0
+          submodules: false
+      - run: git submodule update --init --recursive --depth=0
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: bff-dist
           path: apps/bff/dist
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: web-dist
           path: apps/web/dist
 
-      - uses: aws-actions/configure-aws-credentials@v4
+      - uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
           aws-region: us-east-1
@@ -86,11 +90,13 @@ jobs:
     needs: deploy-dev
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
-          submodules: true
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+          fetch-depth: 0
+          submodules: false
+      - run: git submodule update --init --recursive --depth=0
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: pnpm
@@ -128,22 +134,24 @@ jobs:
       BTFP_PROD_JWT_SECRET: ${{ secrets.BTFP_PROD_JWT_SECRET }}
       BTFP_BRAVE_SEARCH_API_KEY: ${{ secrets.BTFP_BRAVE_SEARCH_API_KEY }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
-          submodules: true
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+          fetch-depth: 0
+          submodules: false
+      - run: git submodule update --init --recursive --depth=0
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: bff-dist
           path: apps/bff/dist
 
-      - uses: aws-actions/configure-aws-credentials@v4
+      - uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
           aws-region: us-east-1
@@ -175,11 +183,13 @@ jobs:
       BTFP_PROD_JWT_SECRET: ${{ secrets.BTFP_PROD_JWT_SECRET }}
       BTFP_BRAVE_SEARCH_API_KEY: ${{ secrets.BTFP_BRAVE_SEARCH_API_KEY }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
-          submodules: true
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+          fetch-depth: 0
+          submodules: false
+      - run: git submodule update --init --recursive --depth=0
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: pnpm
@@ -187,11 +197,11 @@ jobs:
 
       # Same artifacts the build job produced and dev already ran — a real
       # promotion, not a rebuild. See docs/ci-cd.md.
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: bff-dist
           path: apps/bff/dist
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: web-dist
           path: apps/web/dist
@@ -205,7 +215,7 @@ jobs:
       # symlink; without this, `dist/index.js` doesn't exist yet.
       - run: pnpm --filter @btfp/shared-types build
 
-      - uses: aws-actions/configure-aws-credentials@v4
+      - uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
           aws-region: us-east-1

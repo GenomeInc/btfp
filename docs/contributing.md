@@ -105,8 +105,8 @@ was built against.
 
    **CI:** btfp checks out `vendor/mycota` by commit SHA. That commit must exist on
    [GenomeInc/mycota](https://github.com/GenomeInc/mycota) (push the mycota branch before or with
-   the btfp pointer bump). Otherwise Actions fails with `upload-pack: not our ref` during
-   submodule fetch.
+   the btfp pointer bump). CI fetches submodules with full history so pins on a mycota feature
+   branch work, not only commits on mycota `main`.
 
 5. **Open a btfp PR** — includes the pointer bump plus app/infra changes. btfp CI checks out
    submodules and runs turbo typecheck/build over the **pinned tree**, so integration breaks
