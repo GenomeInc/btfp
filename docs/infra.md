@@ -1,8 +1,10 @@
 # Infra
 
 AWS CDK (TypeScript), everything in `us-east-1` (required for CloudFront's ACM cert and its
-CLOUDFRONT-scope WAF WebACL; also simplest for a single-region MVP). No VPC, no NAT gateway
-— Lambda talks to DynamoDB directly over the AWS SDK, which is both cheaper and simpler.
+CLOUDFRONT-scope WAF WebACL; also simplest for a single-region MVP). No NAT gateway anywhere
+in this repo — the BFF Lambda talks to DynamoDB directly with no VPC at all, and the one VPC
+that does exist (`Scraper`, for the scheduled Fargate task below) is public-subnets-only, so
+it costs nothing extra either.
 
 ## Automated deploys
 
@@ -24,6 +26,10 @@ deploy gets done, just no longer the routine way changes ship.
   standalone. See [docs/ci-cd.md](./ci-cd.md).
 - **`BtfpDev`** / **`BtfpProd`** — CDK Stages, each composing:
   - **Data** — DynamoDB `Content` + `Users` tables, on-demand billing.
+  - **Scraper** — a VPC (public subnets only, no NAT gateway), an ECS cluster, and one
+    Fargate task definition running on an EventBridge schedule (every 6h) to ingest
+    candidate pet-hazard reports from Reddit into the moderation queue as unverified
+    `Contribution`s — see [docs/scraper.md](./scraper.md).
   - **Api** — one Lambda (container image — see [docs/ci-cd.md](./ci-cd.md)) running the
     NestJS BFF, behind an API Gateway HTTP API.
   - **Web** — S3 (private, OAC) + CloudFront + WAFv2 + ACM cert + Route53 alias record(s).
@@ -42,8 +48,10 @@ deploy gets done, just no longer the routine way changes ship.
 | CloudFront | pennies at this scale |
 | WAF (2 rule groups) | ~$6-8/mo |
 | SES | ~free — $0.10/1,000 emails, and this only sends verification codes |
-| Bedrock (Claude Haiku, domain classification) | ~free — a few cents per 1,000 calls |
+| Bedrock (Claude Haiku, domain classification + scraper extraction) | ~free — a few cents per 1,000 calls |
 | Brave Search (optional, org-legitimacy signal) | free tier covers this app's volume |
+| ECS Fargate (scraper, ~5min/run, every 6h) | ~$1-2/mo per env |
+| VPC (scraper, public-only, no NAT) | free |
 
 Dev + prod together should land well under $50/mo unless traffic spikes hard. The two
 biggest levers if it doesn't: drop WAF's rate-limit rule, or merge dev+prod's WAF into a
@@ -148,7 +156,11 @@ hand.
    not meant to be crawled/indexed at all.
 10. For dev: load `infra/cdk/.env.deploy.local` (see [Secrets](#secrets) above) before
     deploying — the Basic Auth password comes from there. For prod, no extra env vars needed.
-11. `pnpm --filter @btfp/infra cdk deploy BtfpDev/* BtfpProd/*`
+11. `pnpm --filter @btfp/infra cdk deploy BtfpDev/* BtfpProd/*` — this also deploys the
+    `Scraper` stack; a fresh environment needs the Reddit SSM params pushed
+    (`pnpm secrets:push dev`/`prod`, see [docs/scraper.md](./scraper.md)) before the
+    scraper task does anything useful — it deploys and runs fine either way, just
+    logs "Reddit credentials not configured, skipping" and no-ops until they exist.
 
 The Bedrock inference profile id (`BEDROCK_INFERENCE_PROFILE_ID` in `config.ts`) is
 hardcoded to Claude Haiku 4.5's current profile — Anthropic model ids on Bedrock are

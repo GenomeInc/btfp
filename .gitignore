@@ -14,6 +14,16 @@ coverage/
 .dynamodb/
 *.log
 
+# Playwright output — traces, screenshots, HTML report
+test-results/
+playwright-report/
+blob-report/
+
 # ASPCA-derived; keep local-only rather than redistributing scraped content
 # under this repo's license. See docs/data-sourcing.md.
 data/seed/source/dog-toxicity-dataset.json
+
+# vetmeds.org-derived (American College of Veterinary Pharmacists); same
+# redistribution reasoning as above. See docs/data-sourcing.md.
+data/seed/source/vetmeds-staging.json
+data/seed/source/vetmeds-toxins.json

@@ -13,6 +13,30 @@ public — redistributing it under this repo's license isn't something to do wit
 ASPCA's sign-off. Keep your own local copy at that path to run `pnpm seed:local`; ask
 whoever gave you the original dataset for a copy if you don't have one.
 
+## vetmeds.org (American College of Veterinary Pharmacists)
+
+`data/seed/src/scrape-vetmeds.ts` pulls ~106 professionally-authored toxin
+entries from vetmeds.org's Pet Poison Control (via its public WordPress
+REST API — structured JSON, no HTML scraping needed) into
+`data/seed/source/vetmeds-staging.json`. It extracts only short,
+structured facts (clinical signs, toxic-dose summary, category) — never
+the source's full descriptive prose verbatim.
+
+This is **not** a "broad automated scraping" exception to the philosophy
+above — it's an implementation of it. The script only does the tedious
+fetch-and-parse labor; nothing is promoted to seed data or seeded as a
+`verified: true` `Thing` until a human has actually reviewed and corrected
+the staging output (category/`thingTypeId`/severity assignment is
+deliberately left to that review step, not inferred by the script) and
+copied it to `data/seed/source/vetmeds-toxins.json`. Both files are
+**gitignored, not committed** — same reasoning as the ASPCA dataset above:
+this is vetmeds.org's copyrighted clinical content, and redistributing it
+under this repo's license isn't something to do without their sign-off.
+
+`data/seed/src/run.ts` loads `vetmeds-toxins.json` optionally — a
+contributor without that (gitignored) file can still run `seed:local`
+using just the datasets above.
+
 ## Expanding coverage
 
 Deliberately **not** proposing broad automated scraping here — most veterinary/poison-control

@@ -1,23 +1,26 @@
 {
-  "name": "@btfp/seed",
+  "name": "@btfp/scraper",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "seed:local": "tsx src/run.ts --endpoint http://localhost:8000",
-    "scrape:vetmeds": "tsx src/scrape-vetmeds.ts",
+    "build": "node scripts/build.mjs",
     "typecheck": "tsc -b --noEmit",
+    "lint": "oxlint -c ../../.oxlintrc.json src",
     "test": "vitest run"
   },
   "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.716.0",
     "@aws-sdk/client-dynamodb": "^3.716.0",
     "@aws-sdk/lib-dynamodb": "^3.716.0",
     "@btfp/shared-types": "workspace:*",
-    "cheerio": "^1.0.0"
+    "@mycota/config": "workspace:*",
+    "@mycota/dynamo": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
-    "tsx": "^4.19.0",
+    "aws-sdk-client-mock": "^4.1.0",
+    "esbuild": "^0.24.2",
     "typescript": "^5.8.0",
     "vitest": "^2.1.0"
   }

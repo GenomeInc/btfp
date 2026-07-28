@@ -9,8 +9,10 @@ import {
   THING_TYPES,
   transformDataset,
   transformCuratedHazards,
+  transformVetmedsToxins,
   type RawDataset,
   type CuratedHazardsDataset,
+  type VetmedsToxinsDataset,
 } from './transform.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -74,6 +76,17 @@ async function main() {
   const hazardsPath = path.join(__dirname, '../source/product-activity-hazards.json');
   const rawHazards = JSON.parse(await readFile(hazardsPath, 'utf-8')) as CuratedHazardsDataset;
   things.push(...transformCuratedHazards(rawHazards));
+
+  // Gitignored, human-reviewed output of scrape-vetmeds.ts (see
+  // docs/data-sourcing.md) — optional so a fresh contributor without this
+  // file can still run seed:local using just the datasets above.
+  const vetmedsPath = path.join(__dirname, '../source/vetmeds-toxins.json');
+  try {
+    const rawVetmeds = JSON.parse(await readFile(vetmedsPath, 'utf-8')) as VetmedsToxinsDataset;
+    things.push(...transformVetmedsToxins(rawVetmeds));
+  } catch (err) {
+    if ((err as NodeJS.ErrnoException).code !== 'ENOENT') throw err;
+  }
 
   console.log(
     `Seeding ${PET_TYPES.length} pet types, ${THING_TYPES.length} thing types, ${things.length} things ` +
