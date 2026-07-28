@@ -108,6 +108,14 @@ export const THING_TYPES: ThingType[] = [
     createdAt: '',
     updatedAt: '',
   },
+  {
+    id: 'drug',
+    name: 'Illicit & Recreational Drug',
+    description: 'Illicit and recreational drugs — distinct from medication (prescribed/OTC).',
+    details: {},
+    createdAt: '',
+    updatedAt: '',
+  },
 ].map(stamp);
 
 export function transformDataset(raw: RawDataset): Thing[] {
@@ -208,6 +216,45 @@ export function transformCuratedHazards(raw: CuratedHazardsDataset): Thing[] {
       thingTypeId: entry.thingType,
       petTypes: entry.petTypes.map((petTypeId) => ({ petTypeId, severity: entry.severity })),
       details: { hazard: entry.hazard, notes: entry.notes },
+      source: entry.source,
+      sourceUrl: entry.sourceUrl,
+      verified: true,
+      createdAt: '',
+      updatedAt: '',
+    }),
+  );
+}
+
+export interface VetmedsToxinsDataset {
+  entries: VetmedsToxinEntry[];
+}
+
+export interface VetmedsToxinEntry {
+  name: string;
+  thingTypeId: string;
+  petTypes: PetToxicity[];
+  details: { category: string; clinicalSigns?: string; toxicDoseSummary?: string };
+  source: string;
+  sourceUrl: string;
+}
+
+/**
+ * Kept separate from transformCuratedHazards rather than widening its
+ * CuratedHazardEntry union — vetmeds.org entries carry a richer, differently-
+ * shaped details object (clinicalSigns/toxicDoseSummary/category, not a
+ * freeform hazard/notes pair), and this way existing working code stays
+ * untouched. See data/seed/src/scrape-vetmeds.ts + docs/data-sourcing.md
+ * for how this dataset is produced (script-assisted, human-reviewed).
+ */
+export function transformVetmedsToxins(raw: VetmedsToxinsDataset): Thing[] {
+  return raw.entries.map((entry) =>
+    stamp({
+      id: stableId(entry.thingTypeId, entry.name),
+      name: entry.name,
+      otherNames: [],
+      thingTypeId: entry.thingTypeId,
+      petTypes: entry.petTypes,
+      details: entry.details,
       source: entry.source,
       sourceUrl: entry.sourceUrl,
       verified: true,
