@@ -77,10 +77,11 @@ Every relevant push to mycota's `main` publishes one of two ways:
 
    This bumps `@bubltec/mycota-auth`/`-dynamo`/`-professional-verification` in `apps/bff`,
    `@bubltec/mycota-config`/`-dynamo` in `apps/scraper`, and `@bubltec/mycota-cdk` in
-   `infra/cdk` to whatever `next` currently resolves to. This is a **deliberate, one-time
-   pull** — package versions are pinned at install time, not auto-updating, so re-run this
-   whenever you want the latest. To pin to a real release instead of tracking `next`, run
-   `pnpm add @bubltec/mycota-x` (no tag) for the specific packages you need.
+   `infra/cdk` to whatever `latest` (the most recent real release) currently resolves to.
+   This is a **deliberate, one-time pull** — package versions are pinned at install time,
+   not auto-updating, so re-run this whenever you want the newest release. To track the
+   rolling prerelease instead, run `pnpm add @bubltec/mycota-x@next` for the specific
+   packages you need.
 4. **Validate**: `pnpm turbo run typecheck build test`.
 5. **Commit the result** like any other dependency bump — it's just a `package.json`/
    `pnpm-lock.yaml` diff, no special submodule-pointer ceremony.
