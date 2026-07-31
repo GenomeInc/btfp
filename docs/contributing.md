@@ -55,16 +55,20 @@ packages, its own git history and CI. It's published to the public npm registry 
 `@bubltec/mycota-*`, and btfp consumes it as an ordinary dependency — no submodule, no workspace
 linking.
 
-Every push to mycota's `main` that touches its packages automatically publishes a new version
-under the `dev` dist-tag (e.g. `0.1.0-dev.42`). `latest` is reserved for a real stable release,
-done deliberately, not by that automated job.
+Every relevant push to mycota's `main` publishes one of two ways:
+
+- **No `#major`/`#minor`/`#patch` marker in the merge commit** (the normal case) — publishes a
+  rolling prerelease under the `next` dist-tag (e.g. `1.2.1-next.42`).
+- **Marker present** (put it in the PR title — that's what becomes the squash-merge commit
+  subject) — cuts a real semver release, publishes under `latest`, and tags/releases it in git.
 
 ### Typical loop
 
 1. **Edit framework code** in a separate clone of [bubltec/mycota](https://github.com/bubltec/mycota)
    (`git clone git@github.com:bubltec/mycota.git` somewhere outside this repo).
-2. **Push to mycota's `main`** — its CI runs `pnpm turbo run typecheck build test`, then
-   automatically publishes a new `@bubltec/mycota-*@dev` version.
+2. **Open a PR, merge to `main`** — its CI runs `pnpm turbo run typecheck build test`, then
+   publishes automatically per the rule above. Include a `#major`/`#minor`/`#patch` marker in the
+   PR title if this should be a real release rather than just moving `next` forward.
 3. **Pull the new version into btfp**:
 
    ```bash
@@ -73,14 +77,15 @@ done deliberately, not by that automated job.
 
    This bumps `@bubltec/mycota-auth`/`-dynamo`/`-professional-verification` in `apps/bff`,
    `@bubltec/mycota-config`/`-dynamo` in `apps/scraper`, and `@bubltec/mycota-cdk` in
-   `infra/cdk` to whatever the `dev` tag currently resolves to. This is a **deliberate, one-time
+   `infra/cdk` to whatever `next` currently resolves to. This is a **deliberate, one-time
    pull** — package versions are pinned at install time, not auto-updating, so re-run this
-   whenever you want the latest.
+   whenever you want the latest. To pin to a real release instead of tracking `next`, run
+   `pnpm add @bubltec/mycota-x` (no tag) for the specific packages you need.
 4. **Validate**: `pnpm turbo run typecheck build test`.
 5. **Commit the result** like any other dependency bump — it's just a `package.json`/
    `pnpm-lock.yaml` diff, no special submodule-pointer ceremony.
 
-For a fast local edit-and-test loop against a mycota change without waiting for a dev publish:
+For a fast local edit-and-test loop against a mycota change without waiting for a publish:
 `pnpm link --global` from your mycota clone, then `pnpm link --global @bubltec/mycota-auth` (etc.)
 in this repo.
 

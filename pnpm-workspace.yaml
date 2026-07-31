@@ -10,9 +10,9 @@ allowBuilds:
   '@scarf/scarf': false
   esbuild: true
   lefthook: true
+# First-party packages published by our own CI (vs. third-party supply-chain
+# risk, which is what minimumReleaseAge exists to guard against) — exempt
+# the whole scope so the `next` rolling-prerelease channel isn't silently
+# blocked from ever installing what CI just published.
 minimumReleaseAgeExclude:
-  - '@bubltec/mycota-auth@0.1.0-dev.0'
-  - '@bubltec/mycota-config@0.1.0-dev.0'
-  - '@bubltec/mycota-dynamo@0.1.0-dev.0'
-  - '@bubltec/mycota-professional-verification@0.1.0-dev.0'
-  - '@bubltec/mycota-cdk@0.1.0-dev.0'
+  - '@bubltec/*'

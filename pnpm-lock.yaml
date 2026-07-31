@@ -45,14 +45,14 @@ importers:
         specifier: workspace:*
         version: link:../../packages/shared-types
       '@bubltec/mycota-auth':
-        specifier: 0.1.0-dev.0
-        version: 0.1.0-dev.0(@aws-sdk/client-dynamodb@3.1087.0)
+        specifier: 0.0.1-next.10
+        version: 0.0.1-next.10(@aws-sdk/client-dynamodb@3.1087.0)
       '@bubltec/mycota-dynamo':
-        specifier: 0.1.0-dev.0
-        version: 0.1.0-dev.0(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+        specifier: 0.0.1-next.10
+        version: 0.0.1-next.10(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@bubltec/mycota-professional-verification':
-        specifier: 0.1.0-dev.0
-        version: 0.1.0-dev.0(@aws-sdk/client-dynamodb@3.1087.0)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+        specifier: 0.0.1-next.10
+        version: 0.0.1-next.10(@aws-sdk/client-dynamodb@3.1087.0)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@fastify/aws-lambda':
         specifier: ^4.1.0
         version: 4.1.0
@@ -161,11 +161,11 @@ importers:
         specifier: workspace:*
         version: link:../../packages/shared-types
       '@bubltec/mycota-config':
-        specifier: 0.1.0-dev.0
-        version: 0.1.0-dev.0
+        specifier: 0.0.1-next.10
+        version: 0.0.1-next.10
       '@bubltec/mycota-dynamo':
-        specifier: 0.1.0-dev.0
-        version: 0.1.0-dev.0(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+        specifier: 0.0.1-next.10
+        version: 0.0.1-next.10(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
     devDependencies:
       '@types/node':
         specifier: ^22.10.0
@@ -266,8 +266,8 @@ importers:
         specifier: ^3.716.0
         version: 3.1089.0
       '@bubltec/mycota-cdk':
-        specifier: 0.1.0-dev.0
-        version: 0.1.0-dev.0(aws-cdk-lib@2.261.0(constructs@10.6.0))(constructs@10.6.0)
+        specifier: 0.0.1-next.10
+        version: 0.0.1-next.10(aws-cdk-lib@2.261.0(constructs@10.6.0))(constructs@10.6.0)
       aws-cdk-lib:
         specifier: ^2.261.0
         version: 2.261.0(constructs@10.6.0)
@@ -613,24 +613,24 @@ packages:
   '@borewit/text-codec@0.2.2':
     resolution: {integrity: sha512-DDaRehssg1aNrH4+2hnj1B7vnUGEjU6OIlyRdkMd0aUdIUvKXrJfXsy8LVtXAy7DRvYVluWbMspsRhz2lcW0mQ==}
 
-  '@bubltec/mycota-auth@0.1.0-dev.0':
-    resolution: {integrity: sha512-4hOnXu3+A5q8bwKwhmJU/OGqYbm4BSA4Nm7V73dLzsTuVZAfjucFUWqMEnciPVX1BiSz41kDnsEsKvTtElt0mw==}
+  '@bubltec/mycota-auth@0.0.1-next.10':
+    resolution: {integrity: sha512-8CTtFZ2q1e5WqAA4ZuCw4Yv5eYGVz/QEMQYf3q2MTk9VJWGELgXIzOf+v/Wq0u0a/TkiQb0cd2NNWuxSR2gC5Q==}
 
-  '@bubltec/mycota-cdk@0.1.0-dev.0':
-    resolution: {integrity: sha512-x3CWv3nCQOXq9qW1KZzue+DToGSZ2fxKq3ntI062OzLmHu8ffeul3LG36LsJ9Vsco1b9hXlzGC3lcF4GyxZgMg==}
+  '@bubltec/mycota-cdk@0.0.1-next.10':
+    resolution: {integrity: sha512-MaJm5FYT+eoHIrR11k1qBdptTc0BbQAFnfVsTxOQuLBvPiIRhlPwKKYYhKRxZMFdPHfoD86NUPDvZ3FexDNmuQ==}
     peerDependencies:
       aws-cdk-lib: ^2.261.0
       constructs: ^10.4.0
 
-  '@bubltec/mycota-config@0.1.0-dev.0':
-    resolution: {integrity: sha512-qD3r6C3w5flnYabsSsuYp7k61aFjeVfGcOJ98PE4SpWiyL+DxYp1yAzF2VLR8959w4Su7fDXq4cQcKwZq9b5zA==}
+  '@bubltec/mycota-config@0.0.1-next.10':
+    resolution: {integrity: sha512-RLsub316Z3tBo4glxp2s/A9AjSWYTJCgq62X+E8ULo+ef8rqAtsZm+4HL2s6jTpD3VW4522kTIPzVT7UUs8VTA==}
     hasBin: true
 
-  '@bubltec/mycota-dynamo@0.1.0-dev.0':
-    resolution: {integrity: sha512-qX3KzmMHyCl76L95YqXaVT57WcadXaXoVtHSKTeHqw1C78cEm7k6sbCj8wabk6sRpwTgjgRzofRtDdQe2nuFbQ==}
+  '@bubltec/mycota-dynamo@0.0.1-next.10':
+    resolution: {integrity: sha512-BvXY2Kur7Gi+s5LhJRkJ4TsyMCbRrD8zcSbXTcoK7aWWvkWfNDk2cWMv/2srDkz4Egz3La8I7DKaMXs+6Ut3gg==}
 
-  '@bubltec/mycota-professional-verification@0.1.0-dev.0':
-    resolution: {integrity: sha512-zCvsG+Qmpwa6xmoz/CeHpw5YHx1Mlei1RVIHBcJ/o6biXhrp7hmXdh0dNifdccLKjp2td4zRcc0d23+by/uuTg==}
+  '@bubltec/mycota-professional-verification@0.0.1-next.10':
+    resolution: {integrity: sha512-yD2sAze6eXRBMAIgoT/c0qn9P/DVAXy3tMqbK/t9UnGJNBIfS6Fyxzp5TopqbXDKDmdtiHs/U6p++uttRpftwQ==}
 
   '@esbuild/aix-ppc64@0.21.5':
     resolution: {integrity: sha512-1SDgH6ZSPTlggy1yI6+Dbkiz8xzpHJEVAlF/AM1tHPLsf5STom9rwtjE4hKAF20FfXXNTFqEYXyJNWh1GiZedQ==}
@@ -3835,13 +3835,13 @@ snapshots:
 
   '@borewit/text-codec@0.2.2': {}
 
-  '@bubltec/mycota-auth@0.1.0-dev.0(@aws-sdk/client-dynamodb@3.1087.0)':
+  '@bubltec/mycota-auth@0.0.1-next.10(@aws-sdk/client-dynamodb@3.1087.0)':
     dependencies:
       '@aws-sdk/client-bedrock-runtime': 3.1087.0
       '@aws-sdk/client-ses': 3.1087.0
       '@aws-sdk/lib-dynamodb': 3.1087.0(@aws-sdk/client-dynamodb@3.1087.0)
-      '@bubltec/mycota-config': 0.1.0-dev.0
-      '@bubltec/mycota-dynamo': 0.1.0-dev.0(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@bubltec/mycota-config': 0.0.1-next.10
+      '@bubltec/mycota-dynamo': 0.0.1-next.10(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/common': 10.4.22(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/core': 10.4.22(@nestjs/common@10.4.22(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/jwt': 10.2.0(@nestjs/common@10.4.22(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))
@@ -3861,17 +3861,17 @@ snapshots:
       - encoding
       - supports-color
 
-  '@bubltec/mycota-cdk@0.1.0-dev.0(aws-cdk-lib@2.261.0(constructs@10.6.0))(constructs@10.6.0)':
+  '@bubltec/mycota-cdk@0.0.1-next.10(aws-cdk-lib@2.261.0(constructs@10.6.0))(constructs@10.6.0)':
     dependencies:
-      '@bubltec/mycota-config': 0.1.0-dev.0
+      '@bubltec/mycota-config': 0.0.1-next.10
       aws-cdk-lib: 2.261.0(constructs@10.6.0)
       constructs: 10.6.0
 
-  '@bubltec/mycota-config@0.1.0-dev.0':
+  '@bubltec/mycota-config@0.0.1-next.10':
     dependencies:
       '@aws-sdk/client-ssm': 3.1088.0
 
-  '@bubltec/mycota-dynamo@0.1.0-dev.0(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)':
+  '@bubltec/mycota-dynamo@0.0.1-next.10(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)':
     dependencies:
       '@aws-sdk/client-dynamodb': 3.1087.0
       '@aws-sdk/lib-dynamodb': 3.1087.0(@aws-sdk/client-dynamodb@3.1087.0)
@@ -3883,9 +3883,9 @@ snapshots:
       - rxjs
       - supports-color
 
-  '@bubltec/mycota-professional-verification@0.1.0-dev.0(@aws-sdk/client-dynamodb@3.1087.0)(reflect-metadata@0.2.2)(rxjs@7.8.2)':
+  '@bubltec/mycota-professional-verification@0.0.1-next.10(@aws-sdk/client-dynamodb@3.1087.0)(reflect-metadata@0.2.2)(rxjs@7.8.2)':
     dependencies:
-      '@bubltec/mycota-auth': 0.1.0-dev.0(@aws-sdk/client-dynamodb@3.1087.0)
+      '@bubltec/mycota-auth': 0.0.1-next.10(@aws-sdk/client-dynamodb@3.1087.0)
       '@nestjs/common': 10.4.22(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       class-transformer: 0.5.1
       class-validator: 0.14.4
