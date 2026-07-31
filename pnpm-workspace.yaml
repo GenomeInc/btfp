@@ -4,6 +4,8 @@ packages:
   - "infra/*"
   - "data/*"
 allowBuilds:
+  '@bubltec/mycota-cdk': true
+  '@bubltec/mycota-config': true
   '@nestjs/core': true
   '@scarf/scarf': false
   esbuild: true

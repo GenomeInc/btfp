@@ -305,170 +305,6 @@ importers:
         specifier: ^5.8.0
         version: 5.9.3
 
-  vendor/mycota/packages/auth:
-    dependencies:
-      '@aws-sdk/client-bedrock-runtime':
-        specifier: ^3.716.0
-        version: 3.1087.0
-      '@aws-sdk/client-ses':
-        specifier: ^3.716.0
-        version: 3.1087.0
-      '@aws-sdk/lib-dynamodb':
-        specifier: ^3.716.0
-        version: 3.1087.0(@aws-sdk/client-dynamodb@3.1087.0)
-      '@bubltec/mycota-config':
-        specifier: workspace:*
-        version: link:../config
-      '@bubltec/mycota-dynamo':
-        specifier: workspace:*
-        version: link:../dynamo
-      '@nestjs/common':
-        specifier: ^10.4.0
-        version: 10.4.22(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
-      '@nestjs/core':
-        specifier: ^10.4.0
-        version: 10.4.22(@nestjs/common@10.4.22(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(reflect-metadata@0.2.2)(rxjs@7.8.2)
-      '@nestjs/jwt':
-        specifier: ^10.2.0
-        version: 10.2.0(@nestjs/common@10.4.22(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))
-      '@nestjs/passport':
-        specifier: ^10.0.3
-        version: 10.0.3(@nestjs/common@10.4.22(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(passport@0.7.0)
-      class-transformer:
-        specifier: ^0.5.1
-        version: 0.5.1
-      class-validator:
-        specifier: ^0.14.1
-        version: 0.14.4
-      passport:
-        specifier: ^0.7.0
-        version: 0.7.0
-      passport-github2:
-        specifier: ^0.1.12
-        version: 0.1.12
-      passport-google-oauth20:
-        specifier: ^2.0.0
-        version: 2.0.0
-      reflect-metadata:
-        specifier: ^0.2.2
-        version: 0.2.2
-      rxjs:
-        specifier: ^7.8.1
-        version: 7.8.2
-    devDependencies:
-      '@fastify/cookie':
-        specifier: ^9.4.0
-        version: 9.4.0
-      '@types/node':
-        specifier: ^22.10.0
-        version: 22.20.1
-      '@types/passport-github2':
-        specifier: ^1.2.9
-        version: 1.2.9
-      '@types/passport-google-oauth20':
-        specifier: ^2.0.16
-        version: 2.0.17
-      fastify:
-        specifier: ^4.28.1
-        version: 4.28.1
-      typescript:
-        specifier: ^5.8.0
-        version: 5.9.3
-      vitest:
-        specifier: ^2.1.0
-        version: 2.1.9(@types/node@22.20.1)(lightningcss@1.32.0)
-
-  vendor/mycota/packages/cdk:
-    dependencies:
-      '@bubltec/mycota-config':
-        specifier: workspace:*
-        version: link:../config
-    devDependencies:
-      '@types/aws-lambda':
-        specifier: ^8.10.146
-        version: 8.10.162
-      '@types/node':
-        specifier: ^22.10.0
-        version: 22.20.1
-      aws-cdk-lib:
-        specifier: ^2.261.0
-        version: 2.261.0(constructs@10.6.0)
-      constructs:
-        specifier: ^10.4.0
-        version: 10.6.0
-      esbuild:
-        specifier: ^0.24.2
-        version: 0.24.2
-      typescript:
-        specifier: ^5.8.0
-        version: 5.9.3
-      vitest:
-        specifier: ^2.1.0
-        version: 2.1.9(@types/node@22.20.1)(lightningcss@1.32.0)
-
-  vendor/mycota/packages/config:
-    dependencies:
-      '@aws-sdk/client-ssm':
-        specifier: ^3.716.0
-        version: 3.1088.0
-    devDependencies:
-      '@types/node':
-        specifier: ^22.10.0
-        version: 22.20.1
-      aws-sdk-client-mock:
-        specifier: ^4.1.0
-        version: 4.1.0
-      typescript:
-        specifier: ^5.8.0
-        version: 5.9.3
-      vitest:
-        specifier: ^2.1.0
-        version: 2.1.9(@types/node@22.20.1)(lightningcss@1.32.0)
-
-  vendor/mycota/packages/dynamo:
-    dependencies:
-      '@aws-sdk/client-dynamodb':
-        specifier: ^3.716.0
-        version: 3.1087.0
-      '@aws-sdk/lib-dynamodb':
-        specifier: ^3.716.0
-        version: 3.1087.0(@aws-sdk/client-dynamodb@3.1087.0)
-      '@nestjs/common':
-        specifier: ^10.4.0
-        version: 10.4.22(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
-    devDependencies:
-      '@types/node':
-        specifier: ^22.10.0
-        version: 22.20.1
-      typescript:
-        specifier: ^5.8.0
-        version: 5.9.3
-      vitest:
-        specifier: ^2.1.0
-        version: 2.1.9(@types/node@22.20.1)(lightningcss@1.32.0)
-
-  vendor/mycota/packages/professional-verification:
-    dependencies:
-      '@bubltec/mycota-auth':
-        specifier: workspace:*
-        version: link:../auth
-      '@nestjs/common':
-        specifier: ^10.4.0
-        version: 10.4.22(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
-      class-transformer:
-        specifier: ^0.5.1
-        version: 0.5.1
-      class-validator:
-        specifier: ^0.14.1
-        version: 0.14.4
-    devDependencies:
-      '@types/node':
-        specifier: ^22.10.0
-        version: 22.20.1
-      typescript:
-        specifier: ^5.8.0
-        version: 5.9.3
-
 packages:
 
   '@aws-cdk/asset-awscli-v1@2.2.282':
@@ -2138,9 +1974,6 @@ packages:
     resolution: {integrity: sha512-sog+wP+8YSJrdWZ/rUJg8xghVTrwoG+BrSlDQpnK5fzSgJHn1INRWXbVWRH0d3vX8dBI01E3yxXRre9Dn+OXQA==}
     cpu: [arm64]
     os: [win32]
-
-  '@types/aws-lambda@8.10.162':
-    resolution: {integrity: sha512-Fn658grtLOci1oxi1391vvDWJRKNGWRSqfxRkmN/Iy3c0tQH1USMKEXcPYHLvope+ZgTFocx9FRQJx1muBL6qw==}
 
   '@types/babel__core@7.20.5':
     resolution: {integrity: sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==}
@@ -4909,8 +4742,6 @@ snapshots:
 
   '@turbo/windows-arm64@2.10.5':
     optional: true
-
-  '@types/aws-lambda@8.10.162': {}
 
   '@types/babel__core@7.20.5':
     dependencies:
