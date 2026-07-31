@@ -104,7 +104,19 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+
+      # Cache the ~150-300MB Chromium download separately from the OS-level
+      # --with-deps libs, which can't be cached (fresh VM every run) but
+      # install fast from the runner's local apt mirror regardless.
+      - uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/pnpm-lock.yaml') }}
       - run: pnpm --filter @btfp/e2e exec playwright install --with-deps chromium
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+      - run: pnpm --filter @btfp/e2e exec playwright install-deps chromium
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
 
       # The exact invocation docs/e2e-testing.md already documents running
       # by hand — now automated. Note: this permanently accumulates test
@@ -239,7 +251,15 @@ jobs:
       # API/DB code with stale web assets — a visible (red job), not
       # silent, accepted risk; see docs/ci-cd.md for the manual recovery
       # path.
+      - uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/pnpm-lock.yaml') }}
       - run: pnpm --filter @btfp/web exec playwright install --with-deps chromium
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+      - run: pnpm --filter @btfp/web exec playwright install-deps chromium
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
       - name: Prerender against live prod API
         working-directory: apps/web
         env:
