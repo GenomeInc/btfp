@@ -16,7 +16,6 @@ jobs:
         with:
           fetch-depth: 0
           submodules: false
-      - run: git submodule update --init --recursive --depth=0
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
@@ -56,7 +55,6 @@ jobs:
         with:
           fetch-depth: 0
           submodules: false
-      - run: git submodule update --init --recursive --depth=0
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
@@ -72,6 +70,12 @@ jobs:
         with:
           name: web-dist
           path: apps/web/dist
+
+      # apps/scraper's Dockerfile only COPYs a pre-built dist/index.js, it
+      # doesn't build it — needed before any cdk deploy/diff, since
+      # ecs.ContainerImage.fromAsset builds the Docker image at synth time,
+      # not just on deploy (so cdk diff needs this too, not just deploy).
+      - run: pnpm --filter @btfp/scraper build
 
       - uses: aws-actions/configure-aws-credentials@v6
         with:
@@ -94,7 +98,6 @@ jobs:
         with:
           fetch-depth: 0
           submodules: false
-      - run: git submodule update --init --recursive --depth=0
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
@@ -138,7 +141,6 @@ jobs:
         with:
           fetch-depth: 0
           submodules: false
-      - run: git submodule update --init --recursive --depth=0
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
@@ -150,6 +152,10 @@ jobs:
         with:
           name: bff-dist
           path: apps/bff/dist
+
+      # See the matching comment in deploy-dev — needed for cdk diff too,
+      # not just deploy.
+      - run: pnpm --filter @btfp/scraper build
 
       - uses: aws-actions/configure-aws-credentials@v6
         with:
@@ -187,7 +193,6 @@ jobs:
         with:
           fetch-depth: 0
           submodules: false
-      - run: git submodule update --init --recursive --depth=0
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
@@ -214,6 +219,9 @@ jobs:
       # checkout, not the artifact. `pnpm install` alone only wires up the
       # symlink; without this, `dist/index.js` doesn't exist yet.
       - run: pnpm --filter @btfp/shared-types build
+
+      # See the matching comment in deploy-dev.
+      - run: pnpm --filter @btfp/scraper build
 
       - uses: aws-actions/configure-aws-credentials@v6
         with:
