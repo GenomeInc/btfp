@@ -36,7 +36,7 @@ via `pnpm secrets:push dev` / `pnpm secrets:push prod` (see
 [docs/infra.md#secrets](./infra.md#secrets)) after setting the real values
 in `infra/cdk/.env.deploy.local`. Per-env, not shared — separate dev/prod
 Reddit apps so dev testing doesn't burn prod's rate-limit budget. The task
-reads them at runtime via `@mycota/config`'s `loadSsmConfig`, IAM-granted
+reads them at runtime via `@bubltec/mycota-config`'s `loadSsmConfig`, IAM-granted
 via `grantSsmConfigRead` — CDK synth never needs these values directly.
 
 ## How it works

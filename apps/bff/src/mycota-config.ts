@@ -1,4 +1,4 @@
-import type { MycotaAuthConfig } from '@mycota/auth';
+import type { MycotaAuthConfig } from '@bubltec/mycota-auth';
 import { USERS_TABLE_NAME } from './dynamo/dynamo.constants.js';
 
 /**

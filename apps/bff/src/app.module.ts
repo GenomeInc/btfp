@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { DynamoModule } from '@mycota/dynamo';
-import { MycotaAuthModule } from '@mycota/auth';
-import { ProfessionalVerificationModule } from '@mycota/professional-verification';
+import { DynamoModule } from '@bubltec/mycota-dynamo';
+import { MycotaAuthModule } from '@bubltec/mycota-auth';
+import { ProfessionalVerificationModule } from '@bubltec/mycota-professional-verification';
 import { PetTypesModule } from './pet-types/pet-types.module.js';
 import { ThingTypesModule } from './thing-types/thing-types.module.js';
 import { ThingsModule } from './things/things.module.js';

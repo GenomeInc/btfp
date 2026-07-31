@@ -14,8 +14,8 @@
     "@aws-sdk/client-dynamodb": "^3.716.0",
     "@aws-sdk/lib-dynamodb": "^3.716.0",
     "@btfp/shared-types": "workspace:*",
-    "@mycota/config": "workspace:*",
-    "@mycota/dynamo": "workspace:*"
+    "@bubltec/mycota-config": "0.1.0-dev.0",
+    "@bubltec/mycota-dynamo": "0.1.0-dev.0"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
