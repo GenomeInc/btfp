@@ -8,8 +8,8 @@ import {
   DynamoDBDocumentClient,
 } from '@aws-sdk/lib-dynamodb';
 import type { Contribution, Thing } from '@btfp/shared-types';
-import { DYNAMO_DOC_CLIENT } from '@mycota/dynamo';
-import { UsersService } from '@mycota/auth';
+import { DYNAMO_DOC_CLIENT } from '@bubltec/mycota-dynamo';
+import { UsersService } from '@bubltec/mycota-auth';
 import { CONTENT_TABLE_NAME } from '../dynamo/dynamo.constants.js';
 import { ThingsService } from '../things/things.service.js';
 import type { CreateContributionDto } from './dto/create-contribution.dto.js';

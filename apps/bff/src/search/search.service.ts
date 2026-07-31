@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ScanCommand, DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 import Fuse from 'fuse.js';
 import type { Thing } from '@btfp/shared-types';
-import { DYNAMO_DOC_CLIENT, stripDynamoKeys } from '@mycota/dynamo';
+import { DYNAMO_DOC_CLIENT, stripDynamoKeys } from '@bubltec/mycota-dynamo';
 import { CONTENT_TABLE_NAME } from '../dynamo/dynamo.constants.js';
 import { COMMON_THING_NAMES } from './common-things.js';
 

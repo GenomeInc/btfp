@@ -1,4 +1,4 @@
-import { loadSsmConfig } from '@mycota/config';
+import { loadSsmConfig } from '@bubltec/mycota-config';
 import { DEFAULT_SUBREDDITS } from './subreddits.js';
 
 export interface ScraperConfig {

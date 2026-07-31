@@ -10,7 +10,7 @@ import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import { Platform } from 'aws-cdk-lib/aws-ecr-assets';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { grantSsmConfigRead } from '@mycota/cdk';
+import { grantSsmConfigRead } from '@bubltec/mycota-cdk';
 import type { EnvConfig } from './config.js';
 import { BEDROCK_INFERENCE_PROFILE_ID } from './config.js';
 

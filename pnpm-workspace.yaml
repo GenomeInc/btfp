@@ -3,9 +3,14 @@ packages:
   - "packages/*"
   - "infra/*"
   - "data/*"
-  - "vendor/mycota/packages/*"
 allowBuilds:
   '@nestjs/core': true
   '@scarf/scarf': false
   esbuild: true
   lefthook: true
+minimumReleaseAgeExclude:
+  - '@bubltec/mycota-auth@0.1.0-dev.0'
+  - '@bubltec/mycota-config@0.1.0-dev.0'
+  - '@bubltec/mycota-dynamo@0.1.0-dev.0'
+  - '@bubltec/mycota-professional-verification@0.1.0-dev.0'
+  - '@bubltec/mycota-cdk@0.1.0-dev.0'

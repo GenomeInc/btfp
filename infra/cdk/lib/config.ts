@@ -56,10 +56,12 @@ export const GITHUB_CLIENT_SECRET_PARAM_NAME = '/btfp/github-client-secret';
 // see docs/ci-cd.md. GitHub's OIDC `sub` claim includes immutable numeric
 // IDs alongside the org/repo names (`owner@ownerId/repo@repoId`, not plain
 // `owner/repo` — confirmed empirically via a debug step that printed the
-// actual token, not assumed from docs). Using the ID-suffixed form is also
-// the more secure match: it can't be hijacked by renaming/transferring the
-// repo to a different org/name later.
-export const GITHUB_REPO = 'GenomeInc@32485630/btfp@1301972078';
+// actual token, not assumed from docs). Using the ID-suffixed form means the
+// repo's own id survives a rename/transfer — confirmed when this repo moved
+// GenomeInc -> bubltec, repo id 1301972078 stayed the same — but the owner
+// id is tied to the org itself, so a genuine move to a *different* org still
+// needs this constant (and a CiStack redeploy) updated, same as here.
+export const GITHUB_REPO = 'bubltec@310348769/btfp@1301972078';
 
 export interface EnvConfig {
   envName: 'dev' | 'prod';

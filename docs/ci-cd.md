@@ -56,8 +56,8 @@ not enforced by `ci.yml` — easy to tighten into a required check later if nami
    open a PR. `ci.yml` runs automatically.
 2. Once `CI / check` is green, merge. This is the only required step before `main` deploys
    itself — merging **is** the deploy trigger, there's no separate "now deploy" action.
-3. Watch it run: `gh run watch --repo GenomeInc/btfp` (or the
-   [Actions tab](https://github.com/GenomeInc/btfp/actions)) picks up the newest run
+3. Watch it run: `gh run watch --repo bubltec/btfp` (or the
+   [Actions tab](https://github.com/bubltec/btfp/actions)) picks up the newest run
    automatically. `build` → `deploy-dev` → `e2e` take a few minutes combined.
 4. If `e2e` fails, prod is never touched — fix forward with a new PR (same as step 1; direct
    pushes to `main` aren't possible for anyone, admins included — see below) and let the
@@ -91,7 +91,7 @@ between `deploy-prod` and actually running — there's no equivalent gate in IAM
   NEW_REVIEWER_ID=$(gh api users/<their-username> --jq .id)
   # Merge with whatever reviewers are already configured — this PUT replaces the whole list,
   # it doesn't append.
-  gh api repos/GenomeInc/btfp/environments/production -X PUT --input - <<EOF
+  gh api repos/bubltec/btfp/environments/production -X PUT --input - <<EOF
   {
     "reviewers": [
       {"type": "User", "id": <existing-reviewer-id>},
@@ -101,12 +101,12 @@ between `deploy-prod` and actually running — there's no equivalent gate in IAM
   }
   EOF
   ```
-  A team works too: `{"type": "Team", "id": <team-id>}`, from `gh api orgs/GenomeInc/teams/<slug>
+  A team works too: `{"type": "Team", "id": <team-id>}`, from `gh api orgs/bubltec/teams/<slug>
   --jq .id` — usually the better call once this is more than a couple of people, since it
   doesn't need a re-PUT every time membership changes.
 - To remove someone, PUT the same way with them left out of the `reviewers` array.
 - To check who's currently a reviewer without changing anything:
-  `gh api repos/GenomeInc/btfp/environments/production --jq '.protection_rules[] | select(.type=="required_reviewers") | .reviewers[].reviewer.login'`.
+  `gh api repos/bubltec/btfp/environments/production --jq '.protection_rules[] | select(.type=="required_reviewers") | .reviewers[].reviewer.login'`.
 
 ## Why promotion is a real guarantee, not just "the same source"
 
@@ -134,9 +134,9 @@ No long-lived AWS credentials are stored in GitHub at all. Instead:
   rather than creating a second one).
 - It creates one IAM role, `btfp-gha-deploy`. Its trust policy allows that OIDC provider to
   assume it, but only when the token's `sub` claim matches one of two patterns:
-  `repo:GenomeInc@32485630/btfp@1301972078:ref:refs/heads/main` (for `deploy-dev`/`prod-diff`,
+  `repo:bubltec@310348769/btfp@1301972078:ref:refs/heads/main` (for `deploy-dev`/`prod-diff`,
   which run as a plain push to `main`) or
-  `repo:GenomeInc@32485630/btfp@1301972078:environment:production` (for `deploy-prod`
+  `repo:bubltec@310348769/btfp@1301972078:environment:production` (for `deploy-prod`
   specifically — a job with `environment:` set gets an *environment-scoped* `sub`, not the
   ref-based one, regardless of what ref triggered it). Both were confirmed empirically, not
   assumed from docs: a temporary debug step printed the real token each time, first showing the
@@ -144,7 +144,7 @@ No long-lived AWS credentials are stored in GitHub at all. Instead:
   survives a rename and can't be hijacked by transferring the name to a different org), then
   showing deploy-prod's `sub` failing to assume-role against the ref-only pattern until the
   `environment:production` pattern was added alongside it. A PR-triggered run's token matches
-  neither (`repo:GenomeInc@.../btfp@...:pull_request`), so `ci.yml` genuinely cannot assume this
+  neither (`repo:bubltec@.../btfp@...:pull_request`), so `ci.yml` genuinely cannot assume this
   role even if it tried.
 - The role's **only** permission is `sts:AssumeRole` on four existing CDK bootstrap roles
   (`deploy-role`, `file-publishing-role`, `image-publishing-role`, `lookup-role` — created once,

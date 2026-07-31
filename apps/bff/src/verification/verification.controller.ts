@@ -6,7 +6,7 @@ import {
   JwtAuthGuard,
   CurrentUser,
   type AuthenticatedUser,
-} from '@mycota/auth';
+} from '@bubltec/mycota-auth';
 import type { SubmitQuizDto } from './dto/submit-quiz.dto.js';
 
 const MIN_ACCOUNT_AGE_DAYS = Number(process.env.MIN_ACCOUNT_AGE_DAYS ?? 30);

@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import { GetCommand, PutCommand, ScanCommand, DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 import type { PetType } from '@btfp/shared-types';
-import { DYNAMO_DOC_CLIENT, stripDynamoKeys } from '@mycota/dynamo';
+import { DYNAMO_DOC_CLIENT, stripDynamoKeys } from '@bubltec/mycota-dynamo';
 import { CONTENT_TABLE_NAME } from '../dynamo/dynamo.constants.js';
 import type { CreatePetTypeDto } from './dto/create-pet-type.dto.js';
 

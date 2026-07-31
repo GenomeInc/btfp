@@ -6,7 +6,7 @@ import {
   DynamoDBDocumentClient,
 } from '@aws-sdk/lib-dynamodb';
 import type { Thing } from '@btfp/shared-types';
-import { DYNAMO_DOC_CLIENT, stripDynamoKeys } from '@mycota/dynamo';
+import { DYNAMO_DOC_CLIENT, stripDynamoKeys } from '@bubltec/mycota-dynamo';
 import { CONTENT_TABLE_NAME } from '../dynamo/dynamo.constants.js';
 import { SearchService } from '../search/search.service.js';
 
