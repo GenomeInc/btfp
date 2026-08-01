@@ -33,24 +33,6 @@ export async function createApp(adapter: FastifyAdapter): Promise<NestFastifyApp
       done();
     });
 
-  // TEMPORARY: diagnosing a prod-only 500 on POST /verification/quiz — the
-  // raw APIGW event has a real body (confirmed via lambda.ts's own
-  // diagnostic), but the controller sees `dto: undefined`. This hook runs
-  // after Fastify's own body parsing but before Nest's route handler, to
-  // tell us whether Fastify itself ever populates request.body. Remove once
-  // root-caused.
-  app
-    .getHttpAdapter()
-    .getInstance()
-    .addHook('preHandler', (request, _reply, done) => {
-      if (request.url.includes('verification/quiz') && request.method === 'POST') {
-        console.warn(
-          `[quiz-diagnostic-2] bodyType=${typeof request.body} body=${JSON.stringify(request.body)?.slice(0, 200)}`,
-        );
-      }
-      done();
-    });
-
   app.enableCors({ origin: process.env.WEB_ORIGIN ?? true, credentials: true });
   // sitemap.xml/robots.txt are excluded so they can live at the site root instead of under /api.
   app.setGlobalPrefix('api', { exclude: ['sitemap.xml', 'robots.txt'] });

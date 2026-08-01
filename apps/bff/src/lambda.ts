@@ -29,30 +29,7 @@ async function bootstrap(): Promise<Proxy> {
   return awsLambdaFastify(adapter.getInstance()) as Proxy;
 }
 
-// TEMPORARY: diagnosing a prod-only 500 on POST /verification/quiz where the
-// body arrives as undefined inside the controller despite the browser
-// sending a real Content-Length. Logs enough of the raw APIGW v2 event shape
-// to tell whether the body ever reached the Lambda at all, without ever
-// logging cookie/auth values. Remove once root-caused.
-function logRawEventShapeForQuizDiagnostic(event: unknown): void {
-  if (typeof event !== 'object' || event === null) return;
-  const e = event as Record<string, unknown>;
-  const path = (e.rawPath as string | undefined) ?? (e.path as string | undefined);
-  if (!path?.includes('verification/quiz')) return;
-  const headers = (e.headers as Record<string, unknown> | undefined) ?? {};
-  console.warn(
-    `[quiz-diagnostic] method=${(e.requestContext as Record<string, unknown> | undefined)?.http ? JSON.stringify((e.requestContext as Record<string, unknown>).http) : e.httpMethod} ` +
-      `contentType=${headers['content-type'] ?? headers['Content-Type']} ` +
-      `contentLength=${headers['content-length'] ?? headers['Content-Length']} ` +
-      `isBase64Encoded=${e.isBase64Encoded} ` +
-      `bodyType=${typeof e.body} ` +
-      `bodyLength=${typeof e.body === 'string' ? e.body.length : 'n/a'} ` +
-      `hasCookiesArray=${Array.isArray(e.cookies)} cookiesArrayLength=${Array.isArray(e.cookies) ? e.cookies.length : 'n/a'}`,
-  );
-}
-
 export const handler = async (event: unknown, context: unknown) => {
   proxy ??= await bootstrap();
-  logRawEventShapeForQuizDiagnostic(event);
   return proxy(event, context);
 };
