@@ -238,12 +238,14 @@ jobs:
   prerender-prod:
     needs: deploy-prod
     runs-on: ubuntu-latest
-    # Same environment as deploy-prod — GitHub only asks the reviewer to
-    # approve once per workflow run per environment, not once per job, so
-    # this doesn't add a second approval click. Split into its own job so a
-    # slow/flaky prerender crawl can't hold the actual "prod is deployed"
-    # job open; deploy-prod is already green and done by the time this runs.
-    environment: production
+    # Deliberately NOT gated by the `production` environment — that would
+    # require a second manual approval click even though deploy-prod (the
+    # actual risky step) already got one, since GitHub's required-reviewer
+    # gate triggers per job, not once per workflow run. All secrets used
+    # here are repo-level (see deploy-dev, which also has no `environment:`
+    # and uses the same secrets), so nothing is lost by skipping it. Split
+    # into its own job so a slow/flaky prerender crawl can't hold the actual
+    # "prod is deployed" job open.
     permissions:
       id-token: write
       contents: read
