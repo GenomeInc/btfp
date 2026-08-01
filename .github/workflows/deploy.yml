@@ -223,15 +223,6 @@ jobs:
           name: web-dist
           path: apps/web/dist
 
-      # NOT part of either artifact: apps/web/dist is already a self-contained
-      # bundle (vite inlines its dependencies at build time), so it doesn't
-      # need this. But prerender.mjs below runs as a plain Node script
-      # (import slugify from '@btfp/shared-types'), resolved at runtime via
-      # the pnpm workspace symlink — which points at this package's source
-      # checkout, not the artifact. `pnpm install` alone only wires up the
-      # symlink; without this, `dist/index.js` doesn't exist yet.
-      - run: pnpm --filter @btfp/shared-types build
-
       # See the matching comment in deploy-dev.
       - run: pnpm --filter @btfp/scraper build
 
@@ -244,13 +235,70 @@ jobs:
         working-directory: infra/cdk
         run: npx cdk deploy 'BtfpProd/*' --require-approval never
 
-      # Two-pass: apps/web/dist deployed above is the generic (unprerendered)
-      # shell. Now that BtfpProd/Api is live, crawl it for real per-route
-      # HTML and re-deploy Web to sync those files — mirrors docs/infra.md's
-      # existing manual step 9. If this step fails, prod is left running new
-      # API/DB code with stale web assets — a visible (red job), not
-      # silent, accepted risk; see docs/ci-cd.md for the manual recovery
-      # path.
+  prerender-prod:
+    needs: deploy-prod
+    runs-on: ubuntu-latest
+    # Same environment as deploy-prod — GitHub only asks the reviewer to
+    # approve once per workflow run per environment, not once per job, so
+    # this doesn't add a second approval click. Split into its own job so a
+    # slow/flaky prerender crawl can't hold the actual "prod is deployed"
+    # job open; deploy-prod is already green and done by the time this runs.
+    environment: production
+    permissions:
+      id-token: write
+      contents: read
+    env:
+      BTFP_HOSTED_ZONE_ID: ${{ vars.BTFP_HOSTED_ZONE_ID }}
+      BTFP_DEV_BASIC_AUTH_USER: ${{ secrets.BTFP_DEV_BASIC_AUTH_USER }}
+      BTFP_DEV_BASIC_AUTH_PASSWORD: ${{ secrets.BTFP_DEV_BASIC_AUTH_PASSWORD }}
+      BTFP_DEV_JWT_SECRET: ${{ secrets.BTFP_DEV_JWT_SECRET }}
+      BTFP_PROD_JWT_SECRET: ${{ secrets.BTFP_PROD_JWT_SECRET }}
+      BTFP_BRAVE_SEARCH_API_KEY: ${{ secrets.BTFP_BRAVE_SEARCH_API_KEY }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          submodules: false
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: bff-dist
+          path: apps/bff/dist
+      - uses: actions/download-artifact@v8
+        with:
+          name: web-dist
+          path: apps/web/dist
+
+      # NOT part of either artifact: apps/web/dist is already a self-contained
+      # bundle (vite inlines its dependencies at build time), so it doesn't
+      # need this. But prerender.mjs below runs as a plain Node script
+      # (import slugify from '@btfp/shared-types'), resolved at runtime via
+      # the pnpm workspace symlink — which points at this package's source
+      # checkout, not the artifact. `pnpm install` alone only wires up the
+      # symlink; without this, `dist/index.js` doesn't exist yet.
+      - run: pnpm --filter @btfp/shared-types build
+
+      # See the matching comment in deploy-dev — needed for cdk synth here too.
+      - run: pnpm --filter @btfp/scraper build
+
+      - uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: us-east-1
+
+      # Two-pass: apps/web/dist deployed by deploy-prod is the generic
+      # (unprerendered) shell. Now that BtfpProd/Api is live, crawl it for
+      # real per-route HTML and re-deploy Web to sync those files — mirrors
+      # docs/infra.md's existing manual step 9. If this job fails, prod is
+      # left running new API/DB code with stale web assets — a visible (red
+      # job), not silent, accepted risk; see docs/ci-cd.md for the manual
+      # recovery path.
       - uses: actions/cache@v4
         id: playwright-cache
         with:
