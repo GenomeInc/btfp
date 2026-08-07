@@ -1,4 +1,4 @@
-import type { PetType, QuizQuestion, Thing, ThingType, User } from '@btfp/shared-types';
+import type { Breed, PetType, QuizQuestion, Thing, ThingType, User } from '@btfp/shared-types';
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`/api${path}`, {
@@ -17,7 +17,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 export type CurrentUser = User;
 
 export const api = {
-  listThings: (params: { q?: string; petType?: string; thingType?: string } = {}) => {
+  listThings: (params: { q?: string; petType?: string; thingType?: string; breed?: string } = {}) => {
     const entries = Object.entries(params).filter((entry): entry is [string, string] =>
       Boolean(entry[1]),
     );
@@ -26,6 +26,8 @@ export const api = {
   },
   getThing: (id: string) => request<Thing>(`/things/${id}`),
   listPetTypes: () => request<PetType[]>('/pet-types'),
+  listBreeds: (petType?: string) =>
+    request<Breed[]>(`/breeds${petType ? `?petType=${petType}` : ''}`),
   listThingTypes: () => request<ThingType[]>('/thing-types'),
   me: () => request<CurrentUser>('/auth/me'),
   getQuiz: () => request<QuizQuestion[]>('/verification/quiz'),

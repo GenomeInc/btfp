@@ -3,16 +3,18 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { BatchWriteCommand, DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
-import type { PetType, Thing, ThingType } from '@btfp/shared-types';
+import type { Breed, PetType, Thing, ThingType } from '@btfp/shared-types';
 import {
   PET_TYPES,
   THING_TYPES,
   transformDataset,
   transformCuratedHazards,
   transformVetmedsToxins,
+  transformDogBreeds,
   type RawDataset,
   type CuratedHazardsDataset,
   type VetmedsToxinsDataset,
+  type DogBreedsDataset,
 } from './transform.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -44,6 +46,13 @@ async function batchWrite(db: DynamoDBDocumentClient, items: Record<string, unkn
 }
 
 const petTypeItem = (petType: PetType) => ({ ...petType, PK: `PETTYPE#${petType.id}`, SK: 'META' });
+const breedItem = (breed: Breed) => ({
+  ...breed,
+  PK: `BREED#${breed.id}`,
+  SK: 'META',
+  GSI1PK: `PETTYPE#${breed.petTypeId}`,
+  GSI1SK: `BREED#${breed.name}`,
+});
 const thingTypeItem = (thingType: ThingType) => ({
   ...thingType,
   PK: `THINGTYPE#${thingType.id}`,
@@ -88,13 +97,18 @@ async function main() {
     if ((err as NodeJS.ErrnoException).code !== 'ENOENT') throw err;
   }
 
+  const breedsPath = path.join(__dirname, '../source/dog-breeds.json');
+  const rawBreeds = JSON.parse(await readFile(breedsPath, 'utf-8')) as DogBreedsDataset;
+  const breeds = transformDogBreeds(rawBreeds);
+
   console.log(
-    `Seeding ${PET_TYPES.length} pet types, ${THING_TYPES.length} thing types, ${things.length} things ` +
-      `into ${CONTENT_TABLE_NAME}${endpoint ? ` at ${endpoint}` : ''}`,
+    `Seeding ${PET_TYPES.length} pet types, ${THING_TYPES.length} thing types, ${breeds.length} breeds, ` +
+      `${things.length} things into ${CONTENT_TABLE_NAME}${endpoint ? ` at ${endpoint}` : ''}`,
   );
 
   await batchWrite(db, PET_TYPES.map(petTypeItem));
   await batchWrite(db, THING_TYPES.map(thingTypeItem));
+  await batchWrite(db, breeds.map(breedItem));
   await batchWrite(db, things.map(thingItem));
 
   console.log('Done.');

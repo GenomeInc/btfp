@@ -1,8 +1,12 @@
+import type { BreedTrait } from './breed.js';
+
 export type Severity = 'mild' | 'moderate' | 'severe' | 'unknown';
 
 export interface PetToxicity {
   petTypeId: string;
   severity: Severity;
+  /** Omitted = applies to the whole species. Set to scope risk to breeds sharing a physical trait (e.g. `long-backed` for stairs). */
+  breedTraits?: BreedTrait[];
 }
 
 export interface Thing {

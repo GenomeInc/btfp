@@ -15,7 +15,7 @@ export class ThingsController {
   @ApiOperation({
     summary: 'Search or browse things dangerous to pets',
     description:
-      'Combine q/petType/thingType freely. With no params, returns every Thing (~450+ and growing).',
+      'Combine q/petType/thingType/breed freely (breed takes precedence over petType — it already implies the species). With no params, returns every Thing (~450+ and growing).',
   })
   @ApiQuery({ name: 'q', required: false, description: 'Free-text fuzzy search' })
   @ApiQuery({ name: 'petType', required: false, description: 'e.g. dog, cat, horse' })
@@ -24,12 +24,19 @@ export class ThingsController {
     required: false,
     description: 'e.g. plant, food, medication, product, activity',
   })
+  @ApiQuery({
+    name: 'breed',
+    required: false,
+    description: 'Breed id — narrows results to that breed’s species and physical traits',
+  })
   async list(
     @Query('q') q?: string,
     @Query('petType') petType?: string,
     @Query('thingType') thingType?: string,
+    @Query('breed') breed?: string,
   ) {
-    if (q) return this.search.search(q, { petType, thingType });
+    if (q) return this.search.search(q, { petType, thingType, breed });
+    if (breed) return this.search.filterByBreed(breed);
     if (thingType) return this.things.listByThingType(thingType);
     if (petType) return this.search.filterByPetType(petType);
     return this.search.all();
