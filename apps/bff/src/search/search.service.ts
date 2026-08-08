@@ -1,12 +1,26 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ScanCommand, DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 import Fuse from 'fuse.js';
-import type { Thing } from '@btfp/shared-types';
+import type { Breed, Thing } from '@btfp/shared-types';
 import { DYNAMO_DOC_CLIENT, stripDynamoKeys } from '@bubltec/mycota-dynamo';
 import { CONTENT_TABLE_NAME } from '../dynamo/dynamo.constants.js';
 import { COMMON_THING_NAMES } from './common-things.js';
+import { BreedsService } from '../breeds/breeds.service.js';
 
 const CACHE_TTL_MS = 60_000;
+
+/**
+ * A Thing entry with no `breedTraits` set applies to the whole species —
+ * only entries that explicitly scope to a trait the breed doesn't have
+ * get excluded.
+ */
+function matchesBreed(thing: Thing, breed: Breed): boolean {
+  return thing.petTypes.some(
+    (p) =>
+      p.petTypeId === breed.petTypeId &&
+      (!p.breedTraits?.length || p.breedTraits.some((trait) => breed.traits.includes(trait))),
+  );
+}
 
 /** Common things first (alphabetical among themselves), then the rest alphabetically. */
 function sortByCommonality(things: Thing[]): Thing[] {
@@ -26,7 +40,10 @@ function sortByCommonality(things: Thing[]): Thing[] {
 export class SearchService {
   private cache: { things: Thing[]; loadedAt: number } | null = null;
 
-  constructor(@Inject(DYNAMO_DOC_CLIENT) private readonly db: DynamoDBDocumentClient) {}
+  constructor(
+    @Inject(DYNAMO_DOC_CLIENT) private readonly db: DynamoDBDocumentClient,
+    private readonly breeds: BreedsService,
+  ) {}
 
   async all(): Promise<Thing[]> {
     return sortByCommonality(await this.loadThings());
@@ -39,12 +56,24 @@ export class SearchService {
     );
   }
 
+  async filterByBreed(breedId: string): Promise<Thing[]> {
+    const breed = await this.breeds.getById(breedId);
+    if (!breed) throw new NotFoundException(`No breed with id ${breedId}`);
+
+    const things = await this.loadThings();
+    return sortByCommonality(things.filter((t) => matchesBreed(t, breed)));
+  }
+
   async search(
     query: string,
-    filters: { petType?: string; thingType?: string } = {},
+    filters: { petType?: string; thingType?: string; breed?: string } = {},
   ): Promise<Thing[]> {
     let things = await this.loadThings();
-    if (filters.petType) {
+    if (filters.breed) {
+      const breed = await this.breeds.getById(filters.breed);
+      if (!breed) throw new NotFoundException(`No breed with id ${filters.breed}`);
+      things = things.filter((t) => matchesBreed(t, breed));
+    } else if (filters.petType) {
       things = things.filter((t) => t.petTypes.some((p) => p.petTypeId === filters.petType));
     }
     if (filters.thingType) {

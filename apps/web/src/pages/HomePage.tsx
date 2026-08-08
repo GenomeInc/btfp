@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import type { PetType, Thing } from '@btfp/shared-types';
+import type { Breed, PetType, Thing } from '@btfp/shared-types';
 import { api } from '../lib/api.js';
 import { ThingCard } from '../components/ThingCard.js';
 import { PetTypeSelect } from '../components/PetTypeSelect.js';
+import { BreedSelect } from '../components/BreedSelect.js';
 
 const RANDOM_SAMPLE_SIZE = 20;
 
@@ -20,8 +21,10 @@ export function HomePage() {
   const [params, setParams] = useSearchParams();
   const q = params.get('q') ?? '';
   const petType = params.get('petType') ?? '';
+  const breed = params.get('breed') ?? '';
 
   const [petTypes, setPetTypes] = useState<PetType[]>([]);
+  const [breeds, setBreeds] = useState<Breed[]>([]);
   const [things, setThings] = useState<Thing[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -32,21 +35,35 @@ export function HomePage() {
       .catch(() => setPetTypes([]));
   }, []);
 
+  // Breed data currently only exists for dogs — the picker just doesn't
+  // render for other species/no selection (see the empty-breeds check
+  // below), no need for the caller to know that ahead of time.
+  useEffect(() => {
+    if (!petType) {
+      setBreeds([]);
+      return;
+    }
+    api
+      .listBreeds(petType)
+      .then(setBreeds)
+      .catch(() => setBreeds([]));
+  }, [petType]);
+
   useEffect(() => {
     setLoading(true);
     api
-      .listThings({ q: q || undefined, petType: petType || undefined })
+      .listThings({ q: q || undefined, petType: petType || undefined, breed: breed || undefined })
       .then(setThings)
       .catch(() => setThings([]))
       .finally(() => setLoading(false));
-  }, [q, petType]);
+  }, [q, petType, breed]);
 
-  // Idle browsing (no search, no pet filter) doesn't need to show the whole
-  // ~450-entry database at once — a random taste of what's in here is
+  // Idle browsing (no search, no pet/breed filter) doesn't need to show the
+  // whole ~450-entry database at once — a random taste of what's in here is
   // plenty, and leaves room for other homepage content later. An actual
-  // search or pet-type filter is need-driven, so those still show every
+  // search or pet/breed filter is need-driven, so those still show every
   // real match.
-  const isBrowsing = !q && !petType;
+  const isBrowsing = !q && !petType && !breed;
   const visibleThings = useMemo(
     () => (isBrowsing ? randomSample(things, RANDOM_SAMPLE_SIZE) : things),
     [things, isBrowsing],
@@ -72,8 +89,17 @@ export function HomePage() {
           <PetTypeSelect
             petTypes={petTypes}
             value={petType}
-            onChange={(value) => setParams((prev) => setParam(prev, 'petType', value))}
+            onChange={(value) =>
+              setParams((prev) => setParam(setParam(prev, 'petType', value), 'breed', ''))
+            }
           />
+          {breeds.length > 0 && (
+            <BreedSelect
+              breeds={breeds}
+              value={breed}
+              onChange={(value) => setParams((prev) => setParam(prev, 'breed', value))}
+            />
+          )}
         </div>
       </section>
 

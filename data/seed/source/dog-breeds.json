@@ -1,0 +1,1315 @@
+{
+  "metadata": {
+    "title": "Dog breed roster with physical-trait tags for breed-aware advice",
+    "compiled": "2026-08-03",
+    "compiled_by": "Breed roster: AKC breed list via kkakey/dog_traits_AKC (https://github.com/kkakey/dog_traits_AKC), reformatted from AKC's group-page names into standard breed names. Trait tags manually compiled from veterinary/AKC sources — see docs/data-sourcing.md for the per-trait citation list. Not every breed has a tagged trait; an empty traits array just means none of the five curated categories apply.",
+    "traitDefinitions": {
+      "long-backed": "Chondrodystrophic body shape (short legs relative to a long spine) — elevated IVDD/disc-herniation risk from stairs, jumping, and rough play.",
+      "brachycephalic": "Flat-faced/short-muzzled — elevated heat-intolerance and breathing-obstruction risk, especially with exertion or heat.",
+      "giant-breed": "Very large adult size — elevated risk from joint/bone strain, faster growth-plate issues in puppies, and shorter lifespan considerations.",
+      "deep-chested": "Deep, narrow chest conformation — elevated bloat/GDV (gastric dilatation-volvulus) risk, especially after large meals or exercise soon after eating.",
+      "toy-breed": "Very small adult size — elevated risk from falls/being stepped on, hypoglycemia, and dental crowding."
+    }
+  },
+  "breeds": [
+    {
+      "id": "affenpinscher",
+      "name": "Affenpinscher",
+      "petTypeId": "dog",
+      "traits": [
+        "brachycephalic",
+        "toy-breed"
+      ]
+    },
+    {
+      "id": "afghan-hound",
+      "name": "Afghan Hound",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "airedale-terrier",
+      "name": "Airedale Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "akita",
+      "name": "Akita",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "alaskan-malamute",
+      "name": "Alaskan Malamute",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "american-english-coonhound",
+      "name": "American English Coonhound",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "american-eskimo-dog",
+      "name": "American Eskimo Dog",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "american-foxhound",
+      "name": "American Foxhound",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "american-hairless-terrier",
+      "name": "American Hairless Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "american-staffordshire-terrier",
+      "name": "American Staffordshire Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "american-water-spaniel",
+      "name": "American Water Spaniel",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "anatolian-shepherd-dog",
+      "name": "Anatolian Shepherd Dog",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "australian-cattle-dog",
+      "name": "Australian Cattle Dog",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "australian-shepherd",
+      "name": "Australian Shepherd",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "australian-terrier",
+      "name": "Australian Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "azawakh",
+      "name": "Azawakh",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "barbet",
+      "name": "Barbet",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "basenji",
+      "name": "Basenji",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "basset-hound",
+      "name": "Basset Hound",
+      "petTypeId": "dog",
+      "traits": [
+        "long-backed"
+      ]
+    },
+    {
+      "id": "beagle",
+      "name": "Beagle",
+      "petTypeId": "dog",
+      "traits": [
+        "long-backed"
+      ]
+    },
+    {
+      "id": "bearded-collie",
+      "name": "Bearded Collie",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "beauceron",
+      "name": "Beauceron",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "bedlington-terrier",
+      "name": "Bedlington Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "belgian-malinois",
+      "name": "Belgian Malinois",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "belgian-sheepdog",
+      "name": "Belgian Sheepdog",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "belgian-tervuren",
+      "name": "Belgian Tervuren",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "bergamasco-sheepdog",
+      "name": "Bergamasco Sheepdog",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "berger-picard",
+      "name": "Berger Picard",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "bernese-mountain-dog",
+      "name": "Bernese Mountain Dog",
+      "petTypeId": "dog",
+      "traits": [
+        "giant-breed"
+      ]
+    },
+    {
+      "id": "bichon-frise",
+      "name": "Bichon Frise",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "black-russian-terrier",
+      "name": "Black Russian Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "black-and-tan-coonhound",
+      "name": "Black and Tan Coonhound",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "bloodhound",
+      "name": "Bloodhound",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "bluetick-coonhound",
+      "name": "Bluetick Coonhound",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "boerboel",
+      "name": "Boerboel",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "border-collie",
+      "name": "Border Collie",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "border-terrier",
+      "name": "Border Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "borzoi",
+      "name": "Borzoi",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "boston-terrier",
+      "name": "Boston Terrier",
+      "petTypeId": "dog",
+      "traits": [
+        "brachycephalic"
+      ]
+    },
+    {
+      "id": "bouvier-des-flandres",
+      "name": "Bouvier des Flandres",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "boxer",
+      "name": "Boxer",
+      "petTypeId": "dog",
+      "traits": [
+        "brachycephalic",
+        "deep-chested"
+      ]
+    },
+    {
+      "id": "boykin-spaniel",
+      "name": "Boykin Spaniel",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "briard",
+      "name": "Briard",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "brittany",
+      "name": "Brittany",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "brussels-griffon",
+      "name": "Brussels Griffon",
+      "petTypeId": "dog",
+      "traits": [
+        "brachycephalic",
+        "toy-breed"
+      ]
+    },
+    {
+      "id": "bull-terrier",
+      "name": "Bull Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "bulldog",
+      "name": "Bulldog",
+      "petTypeId": "dog",
+      "traits": [
+        "brachycephalic"
+      ]
+    },
+    {
+      "id": "bullmastiff",
+      "name": "Bullmastiff",
+      "petTypeId": "dog",
+      "traits": [
+        "brachycephalic",
+        "giant-breed"
+      ]
+    },
+    {
+      "id": "cairn-terrier",
+      "name": "Cairn Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "canaan-dog",
+      "name": "Canaan Dog",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "cane-corso",
+      "name": "Cane Corso",
+      "petTypeId": "dog",
+      "traits": [
+        "brachycephalic",
+        "giant-breed"
+      ]
+    },
+    {
+      "id": "cardigan-welsh-corgi",
+      "name": "Cardigan Welsh Corgi",
+      "petTypeId": "dog",
+      "traits": [
+        "long-backed"
+      ]
+    },
+    {
+      "id": "cavalier-king-charles-spaniel",
+      "name": "Cavalier King Charles Spaniel",
+      "petTypeId": "dog",
+      "traits": [
+        "brachycephalic",
+        "toy-breed"
+      ]
+    },
+    {
+      "id": "cesky-terrier",
+      "name": "Cesky Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "chesapeake-bay-retriever",
+      "name": "Chesapeake Bay Retriever",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "chihuahua",
+      "name": "Chihuahua",
+      "petTypeId": "dog",
+      "traits": [
+        "toy-breed"
+      ]
+    },
+    {
+      "id": "chinese-crested",
+      "name": "Chinese Crested",
+      "petTypeId": "dog",
+      "traits": [
+        "toy-breed"
+      ]
+    },
+    {
+      "id": "chinese-shar-pei",
+      "name": "Chinese Shar-Pei",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "chinook",
+      "name": "Chinook",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "chow-chow",
+      "name": "Chow Chow",
+      "petTypeId": "dog",
+      "traits": [
+        "brachycephalic"
+      ]
+    },
+    {
+      "id": "cirneco-delletna",
+      "name": "Cirneco dell'Etna",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "clumber-spaniel",
+      "name": "Clumber Spaniel",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "cocker-spaniel",
+      "name": "Cocker Spaniel",
+      "petTypeId": "dog",
+      "traits": [
+        "long-backed"
+      ]
+    },
+    {
+      "id": "collie",
+      "name": "Collie",
+      "petTypeId": "dog",
+      "traits": [
+        "deep-chested"
+      ]
+    },
+    {
+      "id": "coton-de-tulear",
+      "name": "Coton de Tulear",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "curly-coated-retriever",
+      "name": "Curly-Coated Retriever",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "dachshund",
+      "name": "Dachshund",
+      "petTypeId": "dog",
+      "traits": [
+        "long-backed"
+      ]
+    },
+    {
+      "id": "dalmatian",
+      "name": "Dalmatian",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "dandie-dinmont-terrier",
+      "name": "Dandie Dinmont Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "doberman-pinscher",
+      "name": "Doberman Pinscher",
+      "petTypeId": "dog",
+      "traits": [
+        "deep-chested"
+      ]
+    },
+    {
+      "id": "dogo-argentino",
+      "name": "Dogo Argentino",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "dogue-de-bordeaux",
+      "name": "Dogue de Bordeaux",
+      "petTypeId": "dog",
+      "traits": [
+        "brachycephalic",
+        "giant-breed"
+      ]
+    },
+    {
+      "id": "english-cocker-spaniel",
+      "name": "English Cocker Spaniel",
+      "petTypeId": "dog",
+      "traits": [
+        "long-backed"
+      ]
+    },
+    {
+      "id": "english-foxhound",
+      "name": "English Foxhound",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "english-setter",
+      "name": "English Setter",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "english-springer-spaniel",
+      "name": "English Springer Spaniel",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "english-toy-spaniel",
+      "name": "English Toy Spaniel",
+      "petTypeId": "dog",
+      "traits": [
+        "brachycephalic",
+        "toy-breed"
+      ]
+    },
+    {
+      "id": "entlebucher-mountain-dog",
+      "name": "Entlebucher Mountain Dog",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "field-spaniel",
+      "name": "Field Spaniel",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "finnish-lapphund",
+      "name": "Finnish Lapphund",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "finnish-spitz",
+      "name": "Finnish Spitz",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "flat-coated-retriever",
+      "name": "Flat-Coated Retriever",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "french-bulldog",
+      "name": "French Bulldog",
+      "petTypeId": "dog",
+      "traits": [
+        "long-backed",
+        "brachycephalic"
+      ]
+    },
+    {
+      "id": "german-pinscher",
+      "name": "German Pinscher",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "german-shepherd-dog",
+      "name": "German Shepherd Dog",
+      "petTypeId": "dog",
+      "traits": [
+        "deep-chested"
+      ]
+    },
+    {
+      "id": "german-shorthaired-pointer",
+      "name": "German Shorthaired Pointer",
+      "petTypeId": "dog",
+      "traits": [
+        "deep-chested"
+      ]
+    },
+    {
+      "id": "german-wirehaired-pointer",
+      "name": "German Wirehaired Pointer",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "giant-schnauzer",
+      "name": "Giant Schnauzer",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "glen-of-imaal-terrier",
+      "name": "Glen of Imaal Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "golden-retriever",
+      "name": "Golden Retriever",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "gordon-setter",
+      "name": "Gordon Setter",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "grand-basset-griffon-vendeen",
+      "name": "Grand Basset Griffon Vendeen",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "great-dane",
+      "name": "Great Dane",
+      "petTypeId": "dog",
+      "traits": [
+        "giant-breed",
+        "deep-chested"
+      ]
+    },
+    {
+      "id": "great-pyrenees",
+      "name": "Great Pyrenees",
+      "petTypeId": "dog",
+      "traits": [
+        "giant-breed"
+      ]
+    },
+    {
+      "id": "greater-swiss-mountain-dog",
+      "name": "Greater Swiss Mountain Dog",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "greyhound",
+      "name": "Greyhound",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "harrier",
+      "name": "Harrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "havanese",
+      "name": "Havanese",
+      "petTypeId": "dog",
+      "traits": [
+        "toy-breed"
+      ]
+    },
+    {
+      "id": "ibizan-hound",
+      "name": "Ibizan Hound",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "icelandic-sheepdog",
+      "name": "Icelandic Sheepdog",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "irish-red-and-white-setter",
+      "name": "Irish Red and White Setter",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "irish-setter",
+      "name": "Irish Setter",
+      "petTypeId": "dog",
+      "traits": [
+        "deep-chested"
+      ]
+    },
+    {
+      "id": "irish-terrier",
+      "name": "Irish Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "irish-water-spaniel",
+      "name": "Irish Water Spaniel",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "irish-wolfhound",
+      "name": "Irish Wolfhound",
+      "petTypeId": "dog",
+      "traits": [
+        "giant-breed",
+        "deep-chested"
+      ]
+    },
+    {
+      "id": "italian-greyhound",
+      "name": "Italian Greyhound",
+      "petTypeId": "dog",
+      "traits": [
+        "toy-breed"
+      ]
+    },
+    {
+      "id": "japanese-chin",
+      "name": "Japanese Chin",
+      "petTypeId": "dog",
+      "traits": [
+        "brachycephalic",
+        "toy-breed"
+      ]
+    },
+    {
+      "id": "keeshond",
+      "name": "Keeshond",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "kerry-blue-terrier",
+      "name": "Kerry Blue Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "komondor",
+      "name": "Komondor",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "kuvasz",
+      "name": "Kuvasz",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "labrador-retriever",
+      "name": "Labrador Retriever",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "lagotto-romagnolo",
+      "name": "Lagotto Romagnolo",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "lakeland-terrier",
+      "name": "Lakeland Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "leonberger",
+      "name": "Leonberger",
+      "petTypeId": "dog",
+      "traits": [
+        "giant-breed"
+      ]
+    },
+    {
+      "id": "lhasa-apso",
+      "name": "Lhasa Apso",
+      "petTypeId": "dog",
+      "traits": [
+        "long-backed",
+        "brachycephalic"
+      ]
+    },
+    {
+      "id": "lowchen",
+      "name": "Lowchen",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "maltese",
+      "name": "Maltese",
+      "petTypeId": "dog",
+      "traits": [
+        "toy-breed"
+      ]
+    },
+    {
+      "id": "manchester-terrier",
+      "name": "Manchester Terrier",
+      "petTypeId": "dog",
+      "traits": [
+        "toy-breed"
+      ]
+    },
+    {
+      "id": "mastiff",
+      "name": "Mastiff",
+      "petTypeId": "dog",
+      "traits": [
+        "giant-breed",
+        "deep-chested"
+      ]
+    },
+    {
+      "id": "miniature-american-shepherd",
+      "name": "Miniature American Shepherd",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "miniature-bull-terrier",
+      "name": "Miniature Bull Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "miniature-pinscher",
+      "name": "Miniature Pinscher",
+      "petTypeId": "dog",
+      "traits": [
+        "toy-breed"
+      ]
+    },
+    {
+      "id": "miniature-schnauzer",
+      "name": "Miniature Schnauzer",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "neapolitan-mastiff",
+      "name": "Neapolitan Mastiff",
+      "petTypeId": "dog",
+      "traits": [
+        "giant-breed"
+      ]
+    },
+    {
+      "id": "nederlandse-kooikerhondje",
+      "name": "Nederlandse Kooikerhondje",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "newfoundland",
+      "name": "Newfoundland",
+      "petTypeId": "dog",
+      "traits": [
+        "giant-breed",
+        "deep-chested"
+      ]
+    },
+    {
+      "id": "norfolk-terrier",
+      "name": "Norfolk Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "norwegian-buhund",
+      "name": "Norwegian Buhund",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "norwegian-elkhound",
+      "name": "Norwegian Elkhound",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "norwegian-lundehund",
+      "name": "Norwegian Lundehund",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "norwich-terrier",
+      "name": "Norwich Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "nova-scotia-duck-tolling-retriever",
+      "name": "Nova Scotia Duck Tolling Retriever",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "old-english-sheepdog",
+      "name": "Old English Sheepdog",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "otterhound",
+      "name": "Otterhound",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "papillon",
+      "name": "Papillon",
+      "petTypeId": "dog",
+      "traits": [
+        "toy-breed"
+      ]
+    },
+    {
+      "id": "parson-russell-terrier",
+      "name": "Parson Russell Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "pekingese",
+      "name": "Pekingese",
+      "petTypeId": "dog",
+      "traits": [
+        "long-backed",
+        "brachycephalic",
+        "toy-breed"
+      ]
+    },
+    {
+      "id": "pembroke-welsh-corgi",
+      "name": "Pembroke Welsh Corgi",
+      "petTypeId": "dog",
+      "traits": [
+        "long-backed"
+      ]
+    },
+    {
+      "id": "petit-basset-griffon-vendeen",
+      "name": "Petit Basset Griffon Vendeen",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "pharaoh-hound",
+      "name": "Pharaoh Hound",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "plott-hound",
+      "name": "Plott Hound",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "pointer",
+      "name": "Pointer",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "polish-lowland-sheepdog",
+      "name": "Polish Lowland Sheepdog",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "pomeranian",
+      "name": "Pomeranian",
+      "petTypeId": "dog",
+      "traits": [
+        "toy-breed"
+      ]
+    },
+    {
+      "id": "poodle",
+      "name": "Poodle",
+      "petTypeId": "dog",
+      "traits": [
+        "long-backed",
+        "deep-chested",
+        "toy-breed"
+      ]
+    },
+    {
+      "id": "portuguese-podengo-pequeno",
+      "name": "Portuguese Podengo Pequeno",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "portuguese-water-dog",
+      "name": "Portuguese Water Dog",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "pug",
+      "name": "Pug",
+      "petTypeId": "dog",
+      "traits": [
+        "brachycephalic",
+        "toy-breed"
+      ]
+    },
+    {
+      "id": "puli",
+      "name": "Puli",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "pumi",
+      "name": "Pumi",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "pyrenean-shepherd",
+      "name": "Pyrenean Shepherd",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "rat-terrier",
+      "name": "Rat Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "redbone-coonhound",
+      "name": "Redbone Coonhound",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "rhodesian-ridgeback",
+      "name": "Rhodesian Ridgeback",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "rottweiler",
+      "name": "Rottweiler",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "russell-terrier",
+      "name": "Russell Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "saluki",
+      "name": "Saluki",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "samoyed",
+      "name": "Samoyed",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "schipperke",
+      "name": "Schipperke",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "scottish-deerhound",
+      "name": "Scottish Deerhound",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "scottish-terrier",
+      "name": "Scottish Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "sealyham-terrier",
+      "name": "Sealyham Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "shetland-sheepdog",
+      "name": "Shetland Sheepdog",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "shiba-inu",
+      "name": "Shiba Inu",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "shih-tzu",
+      "name": "Shih Tzu",
+      "petTypeId": "dog",
+      "traits": [
+        "long-backed",
+        "brachycephalic",
+        "toy-breed"
+      ]
+    },
+    {
+      "id": "siberian-husky",
+      "name": "Siberian Husky",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "silky-terrier",
+      "name": "Silky Terrier",
+      "petTypeId": "dog",
+      "traits": [
+        "toy-breed"
+      ]
+    },
+    {
+      "id": "skye-terrier",
+      "name": "Skye Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "sloughi",
+      "name": "Sloughi",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "smooth-fox-terrier",
+      "name": "Smooth Fox Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "soft-coated-wheaten-terrier",
+      "name": "Soft Coated Wheaten Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "spanish-water-dog",
+      "name": "Spanish Water Dog",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "spinone-italiano",
+      "name": "Spinone Italiano",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "st-bernard",
+      "name": "St. Bernard",
+      "petTypeId": "dog",
+      "traits": [
+        "giant-breed",
+        "deep-chested"
+      ]
+    },
+    {
+      "id": "staffordshire-bull-terrier",
+      "name": "Staffordshire Bull Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "standard-schnauzer",
+      "name": "Standard Schnauzer",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "sussex-spaniel",
+      "name": "Sussex Spaniel",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "swedish-vallhund",
+      "name": "Swedish Vallhund",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "tibetan-mastiff",
+      "name": "Tibetan Mastiff",
+      "petTypeId": "dog",
+      "traits": [
+        "giant-breed"
+      ]
+    },
+    {
+      "id": "tibetan-spaniel",
+      "name": "Tibetan Spaniel",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "tibetan-terrier",
+      "name": "Tibetan Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "toy-fox-terrier",
+      "name": "Toy Fox Terrier",
+      "petTypeId": "dog",
+      "traits": [
+        "toy-breed"
+      ]
+    },
+    {
+      "id": "treeing-walker-coonhound",
+      "name": "Treeing Walker Coonhound",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "vizsla",
+      "name": "Vizsla",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "weimaraner",
+      "name": "Weimaraner",
+      "petTypeId": "dog",
+      "traits": [
+        "deep-chested"
+      ]
+    },
+    {
+      "id": "welsh-springer-spaniel",
+      "name": "Welsh Springer Spaniel",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "welsh-terrier",
+      "name": "Welsh Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "west-highland-white-terrier",
+      "name": "West Highland White Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "whippet",
+      "name": "Whippet",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "wire-fox-terrier",
+      "name": "Wire Fox Terrier",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "wirehaired-pointing-griffon",
+      "name": "Wirehaired Pointing Griffon",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "wirehaired-vizsla",
+      "name": "Wirehaired Vizsla",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "xoloitzcuintli",
+      "name": "Xoloitzcuintli",
+      "petTypeId": "dog",
+      "traits": []
+    },
+    {
+      "id": "yorkshire-terrier",
+      "name": "Yorkshire Terrier",
+      "petTypeId": "dog",
+      "traits": [
+        "toy-breed"
+      ]
+    }
+  ]
+}

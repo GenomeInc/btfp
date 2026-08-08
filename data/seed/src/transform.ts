@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import type { PetToxicity, PetType, Severity, Thing, ThingType } from '@btfp/shared-types';
+import type { Breed, BreedTrait, PetToxicity, PetType, Severity, Thing, ThingType } from '@btfp/shared-types';
 
 export interface RawDataset {
   metadata: {
@@ -205,6 +205,15 @@ interface CuratedHazardEntry {
   notes?: string;
   source: string;
   sourceUrl: string;
+  /** Applied uniformly across every petType above — omit to apply to the whole species. */
+  breedTraits?: BreedTrait[];
+  /**
+   * Short search aliases. Fuse's threshold here is tuned tight for short
+   * plant/food names (see search.service.ts) — a long descriptive `name`
+   * needs its likely short search terms listed explicitly, or they won't
+   * score well enough to surface at all.
+   */
+  otherNames?: string[];
 }
 
 export function transformCuratedHazards(raw: CuratedHazardsDataset): Thing[] {
@@ -212,9 +221,13 @@ export function transformCuratedHazards(raw: CuratedHazardsDataset): Thing[] {
     stamp({
       id: stableId(entry.thingType, entry.name),
       name: entry.name,
-      otherNames: [],
+      otherNames: entry.otherNames ?? [],
       thingTypeId: entry.thingType,
-      petTypes: entry.petTypes.map((petTypeId) => ({ petTypeId, severity: entry.severity })),
+      petTypes: entry.petTypes.map((petTypeId) => ({
+        petTypeId,
+        severity: entry.severity,
+        ...(entry.breedTraits ? { breedTraits: entry.breedTraits } : {}),
+      })),
       details: { hazard: entry.hazard, notes: entry.notes },
       source: entry.source,
       sourceUrl: entry.sourceUrl,
@@ -258,6 +271,35 @@ export function transformVetmedsToxins(raw: VetmedsToxinsDataset): Thing[] {
       source: entry.source,
       sourceUrl: entry.sourceUrl,
       verified: true,
+      createdAt: '',
+      updatedAt: '',
+    }),
+  );
+}
+
+export interface DogBreedsDataset {
+  breeds: RawBreed[];
+}
+
+interface RawBreed {
+  id: string;
+  name: string;
+  petTypeId: string;
+  traits: BreedTrait[];
+}
+
+/**
+ * Reference data, not user-contributed — see data/seed/source/dog-breeds.json
+ * and docs/data-sourcing.md for the AKC roster + per-trait veterinary
+ * citations this was compiled from.
+ */
+export function transformDogBreeds(raw: DogBreedsDataset): Breed[] {
+  return raw.breeds.map((breed) =>
+    stamp({
+      id: breed.id,
+      name: breed.name,
+      petTypeId: breed.petTypeId,
+      traits: breed.traits,
       createdAt: '',
       updatedAt: '',
     }),

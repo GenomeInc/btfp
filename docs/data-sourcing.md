@@ -37,6 +37,32 @@ under this repo's license isn't something to do without their sign-off.
 contributor without that (gitignored) file can still run `seed:local`
 using just the datasets above.
 
+## Dog breed roster + physical traits
+
+`data/seed/source/dog-breeds.json` — 195 AKC-recognized dog breeds, each tagged with zero or
+more physical traits (`long-backed`, `brachycephalic`, `giant-breed`, `toy-breed`,
+`deep-chested`) from the closed `BreedTrait` vocabulary in `packages/shared-types/src/breed.ts`.
+Seeded as `Breed` records (`transformDogBreeds` in `data/seed/src/transform.ts`), separate from
+`Thing`. Lets a `Thing`'s `petTypes[].breedTraits` scope a risk to breeds sharing a trait (e.g.
+stairs being risky specifically for `long-backed` breeds) instead of either the whole species or
+a hand-maintained breed-name list.
+
+Committed, not gitignored — unlike the sources above, this isn't a single publisher's
+copyrighted content: the breed roster is AKC breed names via
+[kkakey/dog_traits_AKC](https://github.com/kkakey/dog_traits_AKC) (reformatted into standard
+breed-name form), and the trait tags are manually compiled from public veterinary sources, not
+copied verbatim from any one page. Per-trait citations:
+
+- **long-backed** (chondrodystrophic/IVDD risk): [Hill's Pet — Chondrodystrophic Dog Breeds](https://www.hillspet.com/dog-care/healthcare/chondrodystrophic-short-legged-dog-breeds), [AKC — Intervertebral Disk Disease in Dogs](https://www.akc.org/expert-advice/health/intervertebral-disk-disease-dogs/)
+- **brachycephalic**: [ACVS — Brachycephalic Syndrome](https://www.acvs.org/small-animal/brachycephalic-syndrome/) (AKC's 16-breed list)
+- **giant-breed**: [Great Pet Care — Dog Breeds Prone to Bloat (GDV)](https://www.greatpetcare.com/dog-breeds/dog-breeds-prone-to-bloat-gdv/)
+- **deep-chested** (bloat/GDV risk): same Great Pet Care source as above
+- **toy-breed**: [AKC — Dog Breeds Sorted by Group](https://www.akc.org/public-education/resources/general-tips-information/dog-breeds-sorted-groups/) (Toy Group)
+
+Not every breed has a tagged trait — an empty `traits` array just means none of the five
+curated categories apply, not that the breed was skipped. Dog-only for now; cat breed traits
+(e.g. brachycephalic Persian/Himalayan) would be a natural follow-up but aren't in scope yet.
+
 ## Expanding coverage
 
 Deliberately **not** proposing broad automated scraping here — most veterinary/poison-control

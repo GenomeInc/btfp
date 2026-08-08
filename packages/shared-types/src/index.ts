@@ -1,4 +1,5 @@
 export * from './pet-type.js';
+export * from './breed.js';
 export * from './thing-type.js';
 export * from './thing.js';
 export * from './user.js';

@@ -97,6 +97,18 @@
       "sourceUrl": "https://www.signalpet.com/linear-foreign-bodies/"
     },
     {
+      "name": "Repeated stair climbing or jumping on/off furniture",
+      "otherNames": ["Stairs", "Stair climbing", "Jumping on furniture", "IVDD", "Intervertebral disc disease"],
+      "thingType": "activity",
+      "petTypes": ["dog"],
+      "breedTraits": ["long-backed"],
+      "severity": "moderate",
+      "hazard": "In chondrodystrophic (long-backed, short-legged) breeds, repeated stair use and jumping on/off furniture put repetitive strain on the spine, raising the risk of intervertebral disc disease (IVDD) — herniated or ruptured discs that can cause pain, wobbliness, or hind-limb paralysis. Dachshunds have a relative IVDD risk roughly 10-12 times higher than other breeds.",
+      "notes": "Ramps or steps for couches/beds, and carrying the dog up and down stairs, are common ways owners reduce this risk day to day.",
+      "source": "DachsLife 2015 (PMC); AKC Canine Health Foundation",
+      "sourceUrl": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5097381/"
+    },
+    {
       "name": "String, yarn, ribbon, dental floss, tinsel (linear foreign bodies)",
       "thingType": "object",
       "petTypes": ["dog", "cat"],
